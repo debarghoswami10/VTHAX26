@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -16,14 +17,25 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root { --teal-600: #0d9488; --teal-700: #0f766e; }
-    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    :root {
+      --teal-600: #0d9488;
+      --teal-700: #0f766e;
+    }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
     /* Small utility for line-clamp without plugin */
     .line-clamp-2 {
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   </style>
 </head>
+
 <body class="min-h-screen bg-gray-50">
 
   <!-- Header -->
@@ -40,16 +52,20 @@
 
         <!-- Desktop Nav -->
         <nav class="hidden md:flex space-x-2">
-          <a href="#home" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+          <a href="#home"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="home" class="w-4 h-4"></i><span>Home</span>
           </a>
-          <a href="#services" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+          <a href="#services"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="search" class="w-4 h-4"></i><span>Services</span>
           </a>
-          <a href="#bookings" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+          <a href="#bookings"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="calendar" class="w-4 h-4"></i><span>My Bookings</span>
           </a>
-          <a href="#profile" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+          <a href="#profile"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
           </a>
         </nav>
@@ -62,16 +78,20 @@
 
       <!-- Mobile Nav -->
       <div id="mobileMenu" class="hidden md:hidden py-4 space-y-2 border-t">
-        <a href="#home" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+        <a href="#home"
+          class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="home" class="w-4 h-4"></i><span>Home</span>
         </a>
-        <a href="#services" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+        <a href="#services"
+          class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="search" class="w-4 h-4"></i><span>Services</span>
         </a>
-        <a href="#bookings" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+        <a href="#bookings"
+          class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="calendar" class="w-4 h-4"></i><span>My Bookings</span>
         </a>
-        <a href="#profile" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+        <a href="#profile"
+          class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
         </a>
       </div>
@@ -83,7 +103,8 @@
     <section class="relative bg-gradient-to-r from-teal-600 to-teal-800 overflow-hidden">
       <div class="absolute inset-0 bg-black/20"></div>
       <div class="absolute inset-0"
-           style="background-image:url('https://images.pexels.com/photos/713297/pexels-photo-713297.jpeg');background-size:cover;background-position:center;opacity:.5;"></div>
+        style="background-image:url('https://images.pexels.com/photos/713297/pexels-photo-713297.jpeg');background-size:cover;background-position:center;opacity:.5;">
+      </div>
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         <div class="text-center">
           <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
@@ -102,20 +123,38 @@
                 <div class="md:col-span-5">
                   <div class="relative">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                    <input id="searchQuery" placeholder="What service do you need?"
-                           class="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-teal-500 rounded-xl w-full bg-gray-50" />
+                    <div class="relative">
+                      <i data-lucide="search"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                      <input id="searchQuery" placeholder="What service do you need?"
+                        class="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-teal-500 rounded-xl w-full bg-gray-50"
+                        autocomplete="off" />
+                      <!-- Dropdown -->
+                      <ul id="serviceDropdown"
+                        class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 <div class="md:col-span-5">
                   <div class="relative">
                     <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                    <input id="searchLocation" placeholder="Your location"
-                           class="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-teal-500 rounded-xl w-full bg-gray-50" />
+                    <div class="relative">
+                      <i data-lucide="map-pin"
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                      <input id="searchLocation" placeholder="Your location"
+                        class="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-teal-500 rounded-xl w-full bg-gray-50"
+                        autocomplete="off" />
+                      <!-- Dropdown -->
+                      <ul id="locationDropdown"
+                        class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 <div class="md:col-span-2">
                   <button type="submit"
-                          class="w-full h-14 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all">
+                    class="w-full h-14 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all">
                     Search
                   </button>
                 </div>
@@ -159,34 +198,42 @@
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           <!-- Category card template repeated -->
           <a href="#services" class="group">
-            <div class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
+            <div
+              class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
               <div class="p-6 text-center">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
-                     style="background-color: #0F766E20">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style="background-color: #0F766E20">
                   <i data-lucide="sparkles" class="w-6 h-6" style="color:#0F766E"></i>
                 </div>
-                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Beauty & Wellness</h3>
+                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Beauty &
+                  Wellness</h3>
               </div>
             </div>
           </a>
 
           <a href="#services" class="group">
-            <div class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
+            <div
+              class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
               <div class="p-6 text-center">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
-                     style="background-color: #2563eb20">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style="background-color: #2563eb20">
                   <i data-lucide="spray-can" class="w-6 h-6" style="color:#2563eb"></i>
                 </div>
-                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Cleaning</h3>
+                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Cleaning
+                </h3>
               </div>
             </div>
           </a>
 
           <a href="#services" class="group">
-            <div class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
+            <div
+              class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
               <div class="p-6 text-center">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
-                     style="background-color: #f59e0b20">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style="background-color: #f59e0b20">
                   <i data-lucide="wrench" class="w-6 h-6" style="color:#f59e0b"></i>
                 </div>
                 <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Repairs</h3>
@@ -195,37 +242,46 @@
           </a>
 
           <a href="#services" class="group">
-            <div class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
+            <div
+              class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
               <div class="p-6 text-center">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
-                     style="background-color: #22c55e20">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style="background-color: #22c55e20">
                   <i data-lucide="leaf" class="w-6 h-6" style="color:#22c55e"></i>
                 </div>
-                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Wellness</h3>
+                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Wellness
+                </h3>
               </div>
             </div>
           </a>
 
           <a href="#services" class="group">
-            <div class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
+            <div
+              class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
               <div class="p-6 text-center">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
-                     style="background-color: #0ea5e920">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style="background-color: #0ea5e920">
                   <i data-lucide="car" class="w-6 h-6" style="color:#0ea5e9"></i>
                 </div>
-                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Car Care</h3>
+                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Car Care
+                </h3>
               </div>
             </div>
           </a>
 
           <a href="#services" class="group">
-            <div class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
+            <div
+              class="hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 cursor-pointer border-0 shadow-md bg-white rounded-xl">
               <div class="p-6 text-center">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
-                     style="background-color: #e11d4820">
+                <div
+                  class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"
+                  style="background-color: #e11d4820">
                   <i data-lucide="plug" class="w-6 h-6" style="color:#e11d48"></i>
                 </div>
-                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Appliance</h3>
+                <h3 class="font-semibold text-sm text-gray-900 group-hover:text-teal-600 transition-colors">Appliance
+                </h3>
               </div>
             </div>
           </a>
@@ -245,23 +301,27 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Card 1 -->
-          <article class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
+          <article
+            class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
             <div class="relative">
-              <img src='https://i.pinimg.com/736x/02/6c/cc/026ccc42b200f7e36b23668253d4b1e5.jpg'
-                   alt="Massage & Spa" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-              <span class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-lg inline-flex items-center gap-1">
+              <img src='https://i.pinimg.com/736x/02/6c/cc/026ccc42b200f7e36b23668253d4b1e5.jpg' alt="Massage & Spa"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+              <span
+                class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-lg inline-flex items-center gap-1">
                 <i data-lucide="trending-up" class="w-3 h-3"></i> Popular
               </span>
               <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
             <div class="p-4">
               <div class="flex items-start justify-between mb-2">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Massage & Spa</h3>
+                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Massage & Spa
+                </h3>
                 <div class="flex items-center space-x-1 text-sm text-amber-600">
                   <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.8</span>
                 </div>
               </div>
-              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Relaxing full-body massage by certified therapists at your home.</p>
+              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Relaxing full-body massage by certified therapists at
+                your home.</p>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
                   <div class="text-lg font-bold text-teal-600">$60-$200</div>
@@ -269,27 +329,32 @@
                     <i data-lucide="clock" class="w-4 h-4 mr-1"></i>60m
                   </div>
                 </div>
-                <a href="#book" class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book Now</a>
+                <a href="#book"
+                  class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book
+                  Now</a>
               </div>
               <div class="mt-3 text-xs text-gray-500">1200 people booked this service</div>
             </div>
           </article>
 
           <!-- Card 2 -->
-          <article class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
+          <article
+            class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
             <div class="relative">
-              <img src='https://i.pinimg.com/1200x/90/94/da/9094dadea3bad016bf1c97dee3083490.jpg'
-                   alt="Home Cleaning" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+              <img src='https://i.pinimg.com/1200x/90/94/da/9094dadea3bad016bf1c97dee3083490.jpg' alt="Home Cleaning"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
             <div class="p-4">
               <div class="flex items-start justify-between mb-2">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Home Cleaning</h3>
+                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Home Cleaning
+                </h3>
                 <div class="flex items-center space-x-1 text-sm text-amber-600">
                   <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.9</span>
                 </div>
               </div>
-              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Deep clean for kitchen, bathrooms, bedrooms, and common areas.</p>
+              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Deep clean for kitchen, bathrooms, bedrooms, and common
+                areas.</p>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
                   <div class="text-lg font-bold text-teal-600">$120-$500</div>
@@ -297,16 +362,19 @@
                     <i data-lucide="clock" class="w-4 h-4 mr-1"></i>90m
                   </div>
                 </div>
-                <a href="#book" class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book Now</a>
+                <a href="#book"
+                  class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book
+                  Now</a>
               </div>
             </div>
           </article>
 
           <!-- Card 3 -->
-          <article class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
+          <article
+            class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
             <div class="relative">
-              <img src='https://i.pinimg.com/736x/04/b1/cf/04b1cff128af90daa74b1b11036a2ed9.jpg'
-                   alt="Car Wash" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+              <img src='https://i.pinimg.com/736x/04/b1/cf/04b1cff128af90daa74b1b11036a2ed9.jpg' alt="Car Wash"
+                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
             <div class="p-4">
@@ -316,7 +384,8 @@
                   <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.7</span>
                 </div>
               </div>
-              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Exterior foam wash + interior vacuum + tyre & dash dressing.</p>
+              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Exterior foam wash + interior vacuum + tyre & dash
+                dressing.</p>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
                   <div class="text-lg font-bold text-teal-600">$70-$350</div>
@@ -324,7 +393,9 @@
                     <i data-lucide="clock" class="w-4 h-4 mr-1"></i>45m
                   </div>
                 </div>
-                <a href="#book" class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book Now</a>
+                <a href="#book"
+                  class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book
+                  Now</a>
               </div>
             </div>
           </article>
@@ -342,17 +413,23 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="text-center">
-            <div class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">1</div>
+            <div
+              class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
+              1</div>
             <h3 class="text-xl font-bold text-gray-900 mb-3">Choose Service</h3>
             <p class="text-gray-600">Browse and select from a wide range of premium services</p>
           </div>
           <div class="text-center">
-            <div class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">2</div>
+            <div
+              class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
+              2</div>
             <h3 class="text-xl font-bold text-gray-900 mb-3">Book Appointment</h3>
             <p class="text-gray-600">Pick your preferred time and provide your address details</p>
           </div>
           <div class="text-center">
-            <div class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">3</div>
+            <div
+              class="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
+              3</div>
             <h3 class="text-xl font-bold text-gray-900 mb-3">Enjoy Service</h3>
             <p class="text-gray-600">Verified professionals arrive at your doorstep on time</p>
           </div>
@@ -429,6 +506,187 @@
       window.location.hash = 'services';
       alert(`Searching for: "${decodeURIComponent(q)}" near "${decodeURIComponent(loc)}"`);
     });
+
+    // Major US cities (can expand later)
+    const cities = [
+      // Northeast
+      "New York, NY",
+      "Philadelphia, PA",
+      "Boston, MA",
+      "Pittsburgh, PA",
+      "Buffalo, NY",
+      "Hartford, CT",
+      "Providence, RI",
+
+      // Mid-Atlantic
+      "Washington, DC",
+      "Baltimore, MD",
+      "Richmond, VA",
+      "Norfolk, VA",
+
+      // Southeast
+      "Charlotte, NC",
+      "Raleigh, NC",
+      "Atlanta, GA",
+      "Miami, FL",
+      "Orlando, FL",
+      "Tampa, FL",
+      "Jacksonville, FL",
+      "Nashville, TN",
+      "Memphis, TN",
+      "Louisville, KY",
+      "New Orleans, LA",
+
+      // Midwest
+      "Chicago, IL",
+      "Indianapolis, IN",
+      "Columbus, OH",
+      "Cleveland, OH",
+      "Detroit, MI",
+      "Milwaukee, WI",
+      "Kansas City, MO",
+      "St. Louis, MO",
+      "Minneapolis, MN",
+
+      // Southwest
+      "Dallas, TX",
+      "Houston, TX",
+      "Austin, TX",
+      "San Antonio, TX",
+      "Phoenix, AZ",
+      "El Paso, TX",
+      "Albuquerque, NM",
+
+      // West Coast
+      "Los Angeles, CA",
+      "San Diego, CA",
+      "San Francisco, CA",
+      "San Jose, CA",
+      "Sacramento, CA",
+      "Portland, OR",
+      "Seattle, WA",
+
+      // Mountain West
+      "Denver, CO",
+      "Salt Lake City, UT",
+      "Las Vegas, NV",
+
+      // Extras for coverage
+      "Honolulu, HI",
+      "Anchorage, AK"
+    ];
+
+    const locationInput = document.getElementById("searchLocation");
+    const locationDropdown = document.getElementById("locationDropdown");
+
+    // Show suggestions as user types
+    locationInput.addEventListener("input", () => {
+      const query = locationInput.value.toLowerCase();
+      locationDropdown.innerHTML = "";
+
+      if (!query) {
+        locationDropdown.classList.add("hidden");
+        return;
+      }
+
+      const matches = cities.filter(city => city.toLowerCase().includes(query));
+
+      if (matches.length === 0) {
+        locationDropdown.classList.add("hidden");
+        return;
+      }
+
+      matches.forEach(city => {
+        const li = document.createElement("li");
+        li.textContent = city;
+        li.className = "px-4 py-2 hover:bg-teal-100 cursor-pointer";
+        li.addEventListener("click", () => {
+          locationInput.value = city;
+          locationDropdown.classList.add("hidden");
+        });
+        locationDropdown.appendChild(li);
+      });
+
+      locationDropdown.classList.remove("hidden");
+    });
+
+    // Hide dropdown if clicking outside
+    document.addEventListener("click", (e) => {
+      if (!locationInput.parentNode.contains(e.target)) {
+        locationDropdown.classList.add("hidden");
+      }
+    });
+
+
+    const services = [
+      // Beauty & Wellness
+      "Massage & Spa",
+      "Haircut",
+      "Hairdressing",
+      "Hair Coloring",
+      "Manicure",
+      "Pedicure",
+      "Nail Extensions",
+
+      // Cleaning
+      "House Cleaning",
+      "Kitchen Cleaning",
+      "Bathroom Cleaning",
+      "Lawn Clean-up",
+      "Roof Clean-up",
+
+      // Car Care
+      "Car Wash",
+      "Car Repair",
+
+      // Appliance & Home Repairs
+      "Home Appliance Repair",
+      "Kitchen Appliance Repair",
+      "Electrical Appliance Repair"
+    ];
+
+
+    const serviceInput = document.getElementById("searchQuery");
+    const serviceDropdown = document.getElementById("serviceDropdown");
+
+    // Show suggestions as user types
+    serviceInput.addEventListener("input", () => {
+      const query = serviceInput.value.toLowerCase();
+      serviceDropdown.innerHTML = "";
+
+      if (!query) {
+        serviceDropdown.classList.add("hidden");
+        return;
+      }
+
+      const matches = services.filter(svc => svc.toLowerCase().includes(query));
+
+      if (matches.length === 0) {
+        serviceDropdown.classList.add("hidden");
+        return;
+      }
+
+      matches.forEach(svc => {
+        const li = document.createElement("li");
+        li.textContent = svc;
+        li.className = "px-4 py-2 hover:bg-teal-100 cursor-pointer";
+        li.addEventListener("click", () => {
+          serviceInput.value = svc;
+          serviceDropdown.classList.add("hidden");
+        });
+        serviceDropdown.appendChild(li);
+      });
+
+      serviceDropdown.classList.remove("hidden");
+    });
+
+    // Hide dropdown if clicking outside
+    document.addEventListener("click", (e) => {
+      if (!serviceInput.parentNode.contains(e.target)) {
+        serviceDropdown.classList.add("hidden");
+      }
+    });
   </script>
 </body>
+
 </html>
