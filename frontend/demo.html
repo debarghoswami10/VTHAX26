@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Integration Demo - VTHAX26 "woke" Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root { --teal-600: #0d9488; --teal-700: #0f766e; }
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+  <div class="max-w-4xl mx-auto p-8">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">AI Integration Demo</h1>
+      <p class="text-lg text-gray-600">VTHAX26 "woke" Platform with AI-Powered Service Discovery</p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Try AI-Powered Search</h2>
+      <form id="searchForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">What service do you need?</label>
+          <input 
+            id="searchQuery" 
+            type="text" 
+            placeholder="e.g., I need a massage, My house needs cleaning, Car wash service"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+          />
+        </div>
+        <button 
+          type="submit" 
+          class="w-full bg-teal-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-teal-700 transition-colors"
+        >
+          Search with AI
+        </button>
+      </form>
+    </div>
+
+    <!-- AI Search Results -->
+    <div id="ai-search-results" class="space-y-4"></div>
+
+    <!-- Demo Instructions -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+      <h3 class="text-lg font-semibold text-blue-900 mb-3">Demo Instructions</h3>
+      <div class="space-y-2 text-blue-800">
+        <p><strong>Try these example searches:</strong></p>
+        <ul class="list-disc list-inside space-y-1 ml-4">
+          <li>"I need a massage"</li>
+          <li>"My house needs cleaning"</li>
+          <li>"Car wash service"</li>
+          <li>"Fix my broken washing machine"</li>
+          <li>"I want a facial treatment"</li>
+        </ul>
+        <p class="mt-4"><strong>How it works:</strong></p>
+        <ol class="list-decimal list-inside space-y-1 ml-4">
+          <li>AI classifies your request into service categories</li>
+          <li>You select the most relevant service</li>
+          <li>AI asks followup questions to understand your needs</li>
+          <li>AI matches you with the best providers in your area</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="mt-8 text-center">
+      <div id="status" class="text-sm text-gray-500">
+        <span id="ai-status">🔴 AI Backend: Checking...</span>
+        <span class="mx-2">•</span>
+        <span id="ollama-status">🔴 Ollama: Checking...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Search Integration -->
+  <script src="ai-search.js"></script>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Check backend status
+    async function checkStatus() {
+      try {
+        const response = await fetch('http://localhost:3001/api/bot/classify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: 'test' })
+        });
+        
+        if (response.ok) {
+          document.getElementById('ai-status').textContent = '🟢 AI Backend: Connected';
+        } else {
+          document.getElementById('ai-status').textContent = '🔴 AI Backend: Error';
+        }
+      } catch (error) {
+        document.getElementById('ai-status').textContent = '🔴 AI Backend: Offline';
+      }
+
+      try {
+        const response = await fetch('http://localhost:11434/api/tags');
+        if (response.ok) {
+          document.getElementById('ollama-status').textContent = '🟢 Ollama: Connected';
+        } else {
+          document.getElementById('ollama-status').textContent = '🔴 Ollama: Error';
+        }
+      } catch (error) {
+        document.getElementById('ollama-status').textContent = '🔴 Ollama: Offline';
+      }
+    }
+
+    // Check status on load
+    checkStatus();
+  </script>
+</body>
+</html>
