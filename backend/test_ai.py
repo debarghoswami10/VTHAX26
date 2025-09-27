@@ -42,7 +42,7 @@ async def test_ai_integration():
     print("\n\n2️⃣ Testing Followup Questions")
     print("-" * 40)
     
-    test_services = ["beauty_massage", "home_cleaning", "car_wash"]
+    test_services = ["massage_therapy", "home_cleaning", "car_wash"]
     
     for service_id in test_services:
         print(f"\nService: {service_id}")
@@ -60,7 +60,7 @@ async def test_ai_integration():
     print("-" * 40)
     
     test_matches = [
-        ("beauty_massage", {"duration": "60 min", "type": "Swedish"}),
+        ("massage_therapy", {"duration": "60 min", "type": "Swedish"}),
         ("home_cleaning", {"rooms": "All rooms", "frequency": "One-time"}),
         ("car_wash", {"service_type": "Premium wash", "vehicle_size": "SUV"})
     ]
