@@ -8,7 +8,10 @@ import os
 from ai_integration import classify_service_request, get_service_followups, match_providers
 
 load_dotenv()
-app = FastAPI(title="Woke AI Platform", description="Premium in-house services with AI-powered matching")
+app = FastAPI(
+    title="Woke AI Platform",
+    description="Premium in-house services with AI-powered matching"
+)
 
 # --------------------------
 # CORS Middleware
@@ -64,8 +67,10 @@ class BookingUpdate(BaseModel):
 
 class ReviewCreate(BaseModel):
     booking_id: int
+    customer_id: str
+    tasker_id: str
     rating: int
-    review: Optional[str] = None
+    review_text: Optional[str] = None # matches your table column
 
 # --------------------------
 # Root
@@ -178,20 +183,36 @@ def update_booking(booking_id: int, data: BookingUpdate):
 # --------------------------
 @app.post("/reviews")
 def create_review(data: ReviewCreate):
+    # Validate rating
     if data.rating < 1 or data.rating > 5:
         raise HTTPException(status_code=400, detail="Rating must be 1-5")
-    response = supabase.table("reviews").insert({
-        "booking_id": data.booking_id,
-        "rating": data.rating,
-        "review": data.review
-    }).execute()
+
+    # Insert into Supabase
+    try:
+        response = supabase.table("reviews").insert({
+            "booking_id": data.booking_id,
+            "customer_id": data.customer_id,
+            "tasker_id": data.tasker_id,
+            "rating": data.rating,
+            "review_text": data.review_text
+        }).execute()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create review: {str(e)}")
+
     if not response.data:
         raise HTTPException(status_code=400, detail="Failed to create review")
-    return {"message": "Review submitted", "review": response.data}
 
+    return {"message": "Review submitted", "review": response.data}
 @app.get("/reviews/{tasker_id}")
 def list_tasker_reviews(tasker_id: str):
-    response = supabase.table("reviews").select("*").eq("tasker_id", tasker_id).execute()
+    try:
+        response = supabase.table("reviews").select("*").eq("tasker_id", tasker_id).execute()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch reviews: {str(e)}")
+
+    if response.data is None:
+        return {"reviews": []}  # No reviews found
+
     return {"reviews": response.data}
 
 # --------------------------
