@@ -107,8 +107,9 @@
     function renderProviders(list) {
       grid.innerHTML = "";
       list.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden";
+        const card = document.createElement("a");
+        card.href = `booking.html?provider=${encodeURIComponent(p.name)}`;
+        card.className = "bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden block";
         card.innerHTML = `
           <img src="https://via.placeholder.com/300x200" alt="Provider"
                class="w-full h-40 object-cover">
