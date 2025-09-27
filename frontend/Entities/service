@@ -1,0 +1,59 @@
+{
+  "name": "Service",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Service name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed service description"
+    },
+    "short_description": {
+      "type": "string",
+      "description": "Brief service summary"
+    },
+    "price": {
+      "type": "number",
+      "description": "Service price"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Estimated duration in minutes"
+    },
+    "category_id": {
+      "type": "string",
+      "description": "Reference to ServiceCategory"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Service image URL"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Average service rating"
+    },
+    "total_bookings": {
+      "type": "number",
+      "default": 0,
+      "description": "Total number of bookings"
+    },
+    "is_popular": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether service is marked as popular"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether service is active"
+    }
+  },
+  "required": [
+    "name",
+    "description",
+    "price",
+    "category_id"
+  ]
+}
