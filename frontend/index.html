@@ -56,10 +56,12 @@
             class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="home" class="w-4 h-4"></i><span>Home</span>
           </a>
-          <a href="#services"
-            class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
-            <i data-lucide="search" class="w-4 h-4"></i><span>Services</span>
-          </a>
+          <div class="relative w-64">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+            <input id="navServiceInput" placeholder="Search services..."
+              class="pl-9 pr-3 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-teal-500 rounded-lg w-full bg-white"
+              autocomplete="off" />
+          </div>
           <a href="#bookings"
             class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="calendar" class="w-4 h-4"></i><span>My Bookings</span>
@@ -686,6 +688,47 @@
         serviceDropdown.classList.add("hidden");
       }
     });
+
+    const navServiceInput = document.getElementById("navServiceInput");
+    const navServiceDropdown = document.getElementById("navServiceDropdown");
+
+    navServiceInput.addEventListener("input", () => {
+      const query = navServiceInput.value.toLowerCase();
+      navServiceDropdown.innerHTML = "";
+
+      if (!query) {
+        navServiceDropdown.classList.add("hidden");
+        return;
+      }
+
+      const matches = services.filter(svc => svc.toLowerCase().includes(query));
+
+      if (matches.length === 0) {
+        navServiceDropdown.classList.add("hidden");
+        return;
+      }
+
+      matches.forEach(svc => {
+        const li = document.createElement("li");
+        li.textContent = svc;
+        li.className = "px-4 py-2 hover:bg-teal-100 cursor-pointer text-sm";
+        li.addEventListener("click", () => {
+          navServiceInput.value = svc;
+          navServiceDropdown.classList.add("hidden");
+        });
+        navServiceDropdown.appendChild(li);
+      });
+
+      navServiceDropdown.classList.remove("hidden");
+    });
+
+    // Hide dropdown if clicking outside
+    document.addEventListener("click", (e) => {
+      if (!navServiceInput.parentNode.contains(e.target)) {
+        navServiceDropdown.classList.add("hidden");
+      }
+    });
+
   </script>
 </body>
 
