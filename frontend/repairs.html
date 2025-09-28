@@ -113,8 +113,7 @@
     function renderProviders(list) {
       grid.innerHTML = "";
       list.forEach(p => {
-        const card = document.createElement("a");
-        card.href = `booking.html?provider=${encodeURIComponent(p.name)}&service=${encodeURIComponent(p.services)}&tasker_id=${p.name.toLowerCase().replace(/\s+/g, '-')}-id&task_id=${Math.floor(Math.random() * 1000) + 1}`;
+        const card = document.createElement("div");
         card.className = "bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden block";
         card.innerHTML = `
           <img src="${p.image}" alt="${p.name}" class="w-full h-40 object-cover">
@@ -126,12 +125,74 @@
               <span>${p.rating} (${p.reviews}+)</span>
             </div>
             <p class="text-sm text-teal-600 mt-1">$${p.priceMin} - $${p.priceMax}</p>
+            <button onclick="bookProvider('${p.name}', '${p.services}', '${p.name.toLowerCase().replace(/\s+/g, '-')}-id')" 
+                    class="w-full mt-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+              Book Now
+            </button>
           </div>
         `;
         grid.appendChild(card);
       });
       lucide.createIcons();
     }
+
+    // Function to handle booking a provider
+    async function bookProvider(providerName, services, taskerId) {
+      try {
+        // Check if user is logged in
+        const customerId = localStorage.getItem("customerId");
+        if (!customerId) {
+          alert("Please log in to book a service");
+          window.location.href = "login.html";
+          return;
+        }
+
+        // Show loading state
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = "Creating...";
+        button.disabled = true;
+
+        // Create task in database
+        const taskData = {
+          customer_id: customerId,
+          title: `${services} - ${providerName}`,
+          description: `Professional ${services} service by ${providerName}`,
+          status: "open"
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/tasks", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(taskData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const taskId = result.task.id;
+          
+          // Redirect to booking page with the created task ID
+          window.location.href = `booking.html?provider=${encodeURIComponent(providerName)}&service=${encodeURIComponent(services)}&tasker_id=${taskerId}&task_id=${taskId}`;
+        } else {
+          const errorData = await response.json();
+          console.error("Error creating task:", errorData);
+          alert("Failed to create booking. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error booking provider:", error);
+        alert("An error occurred. Please try again.");
+      } finally {
+        // Reset button state
+        const button = event.target;
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+
+    // Make bookProvider globally available
+    window.bookProvider = bookProvider;
 
     // Initial Render
     renderProviders(providers);

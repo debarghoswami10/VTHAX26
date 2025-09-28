@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Path, Body, Query
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from supabase import create_client
 from pydantic import BaseModel
@@ -25,6 +26,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --------------------------
+# Static Files (for Vercel)
+# --------------------------
+app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 
 # --------------------------
 # Supabase client
@@ -65,6 +71,7 @@ class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
     customer_id: str
+    status: Optional[str] = "open"
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
@@ -178,7 +185,8 @@ def create_task(data: TaskCreate):
     response = supabase.table("tasks").insert({
         "title": data.title,
         "description": data.description,
-        "customer_id": data.customer_id
+        "customer_id": data.customer_id,
+        "status": data.status
     }).execute()
     if not response.data:
         raise HTTPException(status_code=400, detail="Failed to create task")

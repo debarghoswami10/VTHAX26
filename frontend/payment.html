@@ -574,6 +574,7 @@
 
         // Get available tasks
         // Get task ID from URL or create a new task for the service
+        const params = new URLSearchParams(window.location.search);
         let taskId = params.get('task_id');
         if (!taskId) {
           // Create a new task for the service
