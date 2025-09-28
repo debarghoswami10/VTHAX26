@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Path, Body, Query
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from supabase import create_client
@@ -92,16 +93,11 @@ class LoginRequest(BaseModel):
     password: str
 
 @app.post("/login/customer")
-def login_customer(data: LoginRequest):
-    try:
-        user = supabase.auth.sign_in({"email": data.email, "password": data.password})
-        if not user.user:
-            raise HTTPException(status_code=400, detail="Invalid credentials")
-        # Return user id for frontend storage
-        return {"message": "Login successful", "user_id": user.user.id, "email": user.user.email}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Login failed: {str(e)}")
-
+def login_customer(email: str = Body(...), password: str = Body(...)):
+    user = supabase.auth.sign_in_with_password({"email": email, "password": password})
+    if not user.user:
+        raise HTTPException(status_code=400, detail="Login failed")
+    return {"message": "Login successful", "user_id": user.user.id}
 
 # --------------------------
 # Step 2: Providers Endpoint
