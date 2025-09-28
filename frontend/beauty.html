@@ -1,55 +1,150 @@
-<script>
-  lucide.createIcons();
-  let allProviders = [];
-  const grid = document.getElementById("providerGrid");
-
-  function renderProviders(list) {
-    grid.innerHTML = "";
-    list.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden";
-      card.innerHTML = `
-        <img src="https://via.placeholder.com/300x200" alt="Provider"
-             class="w-full h-40 object-cover">
-        <div class="p-4">
-          <h3 class="font-semibold text-gray-900">${p.name}</h3>
-          <p class="text-sm text-gray-500">${p.services}</p>
-          <div class="flex items-center text-sm mt-2">
-            <i data-lucide="star" class="w-4 h-4 text-yellow-400 mr-1"></i>
-            <span>${p.rating} (${p.reviews}+)</span>
-          </div>
-          <p class="text-sm text-teal-600 mt-1">$${p.priceMin} - $${p.priceMax}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beauty & Wellness — Woke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50">
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
+        <span class="font-bold text-xl text-gray-900">woke</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
+        </a>
+        <div class="relative w-64">
+          <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+          <input id="navServiceInput" placeholder="Search services..."
+            class="pl-9 pr-3 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-teal-500 rounded-lg w-full bg-white"
+            autocomplete="off" />
         </div>
-      `;
-      grid.appendChild(card);
-    });
+        <a href="bookings.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="calendar" class="w-4 h-4 mr-1"></i> My Bookings
+        </a>
+        <a href="profile.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="user" class="w-4 h-4 mr-1"></i> Profile
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Heading -->
+    <h2 class="text-xl font-bold mb-4">Beauty & Wellness Providers</h2>
+
+    <!-- FILTERS -->
+    <div class="flex space-x-3 mb-6 overflow-x-auto">
+      <button id="filterRating" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Rating</button>
+      <button id="filterTime" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Time</button>
+      <button id="filterPrice" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Price</button>
+    </div>
+
+    <!-- PROVIDERS GRID -->
+    <div id="providerGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t mt-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
+          <span class="font-bold text-xl text-gray-900">woke</span>
+        </div>
+        <p class="text-gray-600 text-sm">Premium services delivered right to your doorstep. Professional, reliable, and convenient.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-3">Services</h3>
+        <ul class="space-y-2 text-sm text-gray-600">
+          <li><a href="beauty.html" class="hover:text-teal-600">Beauty & Wellness</a></li>
+          <li><a href="cleaning.html" class="hover:text-teal-600">Cleaning</a></li>
+          <li><a href="repairs.html" class="hover:text-teal-600">Repairs</a></li>
+          <li><a href="carcare.html" class="hover:text-teal-600">Car Care</a></li>
+          <li><a href="appliance.html" class="hover:text-teal-600">Appliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-gray-900 mb-3">Support</h3>
+        <ul class="space-y-2 text-sm text-gray-600">
+          <li><a href="#" class="hover:text-teal-600">Contact Us</a></li>
+          <li><a href="#" class="hover:text-teal-600">Help Center</a></li>
+          <li><a href="#" class="hover:text-teal-600">Terms of Service</a></li>
+          <li><a href="#" class="hover:text-teal-600">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t py-4 text-center text-sm text-gray-500">
+      © 2025 woke. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
     lucide.createIcons();
-  }
 
-  async function fetchProviders() {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/providers?service=beauty");
-      allProviders = await res.json();
-      renderProviders(allProviders);
-    } catch (err) {
-      console.error("Failed to fetch providers:", err);
+    // Provider Data
+    const providers = [
+      { name: "Glow Spa", services: "Massage, Facial, Haircare", rating: 4.7, reviews: 200, priceMin: 40, priceMax: 120, time: 30, image: 'https://i.pinimg.com/736x/d5/4d/c9/d54dc92ce48bfdc91b30f6ad17fd6dc5.jpg' },
+      { name: "Urban Salon", services: "Haircut, Coloring", rating: 4.6, reviews: 150, priceMin: 25, priceMax: 90, time: 25, image: 'https://i.pinimg.com/736x/54/d1/1c/54d11c2538da7b66289bb5f7042a56a8.jpg' },
+      { name: "Lotus Wellness", services: "Spa & Manicure", rating: 4.8, reviews: 300, priceMin: 50, priceMax: 110, time: 40, image: 'https://i.pinimg.com/736x/a1/75/0b/a1750bccdca671bbf7263f7cd6087109.jpg' },
+      { name: "Zen Beauty Lounge", services: "Facials, Skincare", rating: 4.5, reviews: 100, priceMin: 30, priceMax: 75, time: 35, image: 'https://i.pinimg.com/1200x/b1/85/0f/b1850fb96d266fae66403bbd49f7e8a4.jpg' },
+      { name: "Bliss Spa", services: "Massage & Relaxation", rating: 4.9, reviews: 400, priceMin: 60, priceMax: 150, time: 45, image: 'https://i.pinimg.com/1200x/38/95/a4/3895a4db2f0512f5434aa154d5fd2c46.jpg' },
+      { name: "Nirvana Salon", services: "Hair Spa, Coloring", rating: 4.6, reviews: 120, priceMin: 35, priceMax: 95, time: 28, image: 'https://i.pinimg.com/736x/87/b3/55/87b35516a7386423646637172e4df501.jpg' },
+      { name: "Serenity Spa", services: "Full Spa Packages", rating: 4.7, reviews: 250, priceMin: 45, priceMax: 130, time: 32, image: 'https://i.pinimg.com/736x/39/9d/b8/399db853fa16b84bc73cf9946edd3f1b.jpg' },
+      { name: "Radiance Beauty", services: "Nails, Manicure", rating: 4.4, reviews: 90, priceMin: 20, priceMax: 70, time: 20, image: 'https://i.pinimg.com/736x/18/ba/08/18ba08dfbe1db45a2636eea459877d01.jpg' }
+    ];
+
+    const grid = document.getElementById("providerGrid");
+
+    function renderProviders(list) {
+      grid.innerHTML = "";
+      list.forEach(p => {
+        const card = document.createElement("a");
+        card.href = `booking.html?provider=${encodeURIComponent(p.name)}&service=${encodeURIComponent(p.services)}&tasker_id=${p.name.toLowerCase().replace(/\s+/g, '-')}-id&task_id=${Math.floor(Math.random() * 1000) + 1}`;
+        card.className = "bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden block";
+        card.innerHTML = `
+          <img src="${p.image}" alt="${p.name}" class="w-full h-40 object-cover">
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-900">${p.name}</h3>
+            <p class="text-sm text-gray-500">${p.services}</p>
+            <div class="flex items-center text-sm mt-2">
+              <i data-lucide="star" class="w-4 h-4 text-yellow-400 mr-1"></i>
+              <span>${p.rating} (${p.reviews}+)</span>
+            </div>
+            <p class="text-sm text-teal-600 mt-1">$${p.priceMin} - $${p.priceMax}</p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
     }
-  }
 
-  fetchProviders();
+    // Initial Render
+    renderProviders(providers);
 
-  document.getElementById("filterRating").addEventListener("click", () => {
-    const sorted = [...allProviders].sort((a, b) => b.rating - a.rating);
-    renderProviders(sorted);
-  });
+    // Filter Buttons
+    document.getElementById("filterRating").addEventListener("click", () => {
+      const sorted = [...providers].sort((a, b) => b.rating - a.rating);
+      renderProviders(sorted);
+    });
 
-  document.getElementById("filterTime").addEventListener("click", () => {
-    const sorted = [...allProviders].sort((a, b) => a.time - b.time);
-    renderProviders(sorted);
-  });
+    document.getElementById("filterTime").addEventListener("click", () => {
+      const sorted = [...providers].sort((a, b) => a.time - b.time);
+      renderProviders(sorted);
+    });
 
-  document.getElementById("filterPrice").addEventListener("click", () => {
-    const sorted = [...allProviders].sort((a, b) => a.priceMin - b.priceMin);
-    renderProviders(sorted);
-  });
-</script>
+    document.getElementById("filterPrice").addEventListener("click", () => {
+      const sorted = [...providers].sort((a, b) => a.priceMin - b.priceMin);
+      renderProviders(sorted);
+    });
+  </script>
+</body>
+</html>

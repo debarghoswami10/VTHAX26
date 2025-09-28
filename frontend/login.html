@@ -20,6 +20,9 @@
     <p class="mt-4 text-sm text-center">
       Don't have an account? <a href="register.html" class="text-teal-600 hover:underline">Sign up</a>
     </p>
+    <p class="mt-2 text-sm text-center">
+      Are you a service provider? <a href="provider-login.html" class="text-teal-600 hover:underline">Provider Login</a>
+    </p>
   </div>
 
   <script>
@@ -38,8 +41,10 @@
         const data = await res.json();
         if (res.ok) {
           localStorage.setItem("customerId", data.user_id);
+          localStorage.setItem("userName", data.user_name || "User");
+          console.log("Login successful for user:", data.user_name, "ID:", data.user_id);
           alert("Login successful!");
-          window.location.href = "cleaning.html"; // Redirect to services page
+          window.location.href = "index.html"; // Redirect to main landing page
         } else {
           alert(data.detail || "Login failed");
         }

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Confirmed — Woke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-50">
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
+        <span class="font-bold text-xl text-gray-900">woke</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
+        </a>
+        <a href="bookings.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="calendar" class="w-4 h-4 mr-1"></i> My Bookings
+        </a>
+        <a href="profile.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="user" class="w-4 h-4 mr-1"></i> Profile
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Success Icon -->
+    <div class="text-center mb-8">
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i data-lucide="check" class="w-10 h-10 text-green-600"></i>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Booking Confirmed!</h1>
+      <p class="text-lg text-gray-600">Your service has been successfully booked</p>
+    </div>
+
+    <!-- Booking Details Card -->
+    <div class="bg-white shadow-lg rounded-2xl p-8 mb-8">
+      <h2 class="text-xl font-bold text-gray-900 mb-6">Booking Details</h2>
+      
+      <div id="bookingDetails" class="space-y-4">
+        <!-- Booking details will be populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
+      <h3 class="text-lg font-semibold text-blue-900 mb-3">What happens next?</h3>
+      <ul class="space-y-2 text-blue-800">
+        <li class="flex items-start">
+          <i data-lucide="clock" class="w-5 h-5 mr-2 mt-0.5 text-blue-600"></i>
+          <span>You'll receive a confirmation email shortly</span>
+        </li>
+        <li class="flex items-start">
+          <i data-lucide="user-check" class="w-5 h-5 mr-2 mt-0.5 text-blue-600"></i>
+          <span>Your service provider will contact you to confirm details</span>
+        </li>
+        <li class="flex items-start">
+          <i data-lucide="calendar" class="w-5 h-5 mr-2 mt-0.5 text-blue-600"></i>
+          <span>You can track your booking status in "My Bookings"</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4">
+      <a href="bookings.html" 
+        class="flex-1 bg-teal-600 text-white text-center py-3 px-6 rounded-lg font-medium hover:bg-teal-700 transition">
+        <i data-lucide="calendar" class="w-5 h-5 inline mr-2"></i>
+        View My Bookings
+      </a>
+      <a href="index.html" 
+        class="flex-1 bg-gray-100 text-gray-700 text-center py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition">
+        <i data-lucide="home" class="w-5 h-5 inline mr-2"></i>
+        Back to Home
+      </a>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Get booking details from URL parameters or localStorage
+    function loadBookingDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const bookingId = params.get('booking_id');
+      
+      // Try to get booking details from localStorage (set by payment page)
+      const bookingData = localStorage.getItem('lastBooking');
+      
+      if (bookingData) {
+        const booking = JSON.parse(bookingData);
+        displayBookingDetails(booking);
+      } else if (bookingId) {
+        // If we have a booking ID, fetch details from API
+        fetchBookingDetails(bookingId);
+      } else {
+        // Fallback: show generic message
+        displayGenericBooking();
+      }
+    }
+
+    function displayBookingDetails(booking) {
+      const detailsContainer = document.getElementById('bookingDetails');
+      detailsContainer.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-600">Booking ID</p>
+            <p class="font-semibold text-gray-900">#${booking.id || 'N/A'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Service</p>
+            <p class="font-semibold text-gray-900">${booking.service_name || 'Service'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Provider</p>
+            <p class="font-semibold text-gray-900">${booking.provider_name || 'TBD'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Status</p>
+            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+              Pending
+            </span>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Customer</p>
+            <p class="font-semibold text-gray-900">${booking.customer_name || 'N/A'}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Email</p>
+            <p class="font-semibold text-gray-900">${booking.customer_email || 'N/A'}</p>
+          </div>
+          <div class="md:col-span-2">
+            <p class="text-sm text-gray-600">Address</p>
+            <p class="font-semibold text-gray-900">${booking.customer_address || 'N/A'}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function displayGenericBooking() {
+      const detailsContainer = document.getElementById('bookingDetails');
+      detailsContainer.innerHTML = `
+        <div class="text-center py-8">
+          <i data-lucide="info" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i>
+          <p class="text-gray-600">Booking details will be available shortly</p>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    async function fetchBookingDetails(bookingId) {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/bookings/${bookingId}`);
+        if (response.ok) {
+          const data = await response.json();
+          displayBookingDetails(data.booking);
+        } else {
+          displayGenericBooking();
+        }
+      } catch (error) {
+        console.error('Error fetching booking details:', error);
+        displayGenericBooking();
+      }
+    }
+
+    // Load booking details on page load
+    loadBookingDetails();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookings — Woke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-50">
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
+        <span class="font-bold text-xl text-gray-900">woke</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
+        </a>
+        <div class="relative w-64">
+          <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+          <input id="navServiceInput" placeholder="Search services..."
+            class="pl-9 pr-3 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-teal-500 rounded-lg w-full bg-white"
+            autocomplete="off" />
+        </div>
+        <a href="bookings.html" class="flex items-center text-teal-600 font-medium">
+          <i data-lucide="calendar" class="w-4 h-4 mr-1"></i> My Bookings
+        </a>
+        <a href="profile.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="user" class="w-4 h-4 mr-1"></i> Profile
+        </a>
+        <!-- Auth Buttons -->
+        <div id="authButtons" class="flex items-center space-x-2">
+          <button id="loginBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+            Login
+          </button>
+          <button id="registerBtn" class="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-md hover:bg-teal-700">
+            Sign Up
+          </button>
+        </div>
+        <!-- User Menu (hidden by default) -->
+        <div id="userMenu" class="hidden flex items-center space-x-2">
+          <span id="userName" class="text-sm font-medium text-gray-700"></span>
+          <button id="logoutBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+            Logout
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Heading -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-900">My Bookings</h2>
+      <div class="flex space-x-2">
+        <button id="refreshBtn" class="px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700 flex items-center">
+          <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i> Refresh
+        </button>
+        <button onclick="addTestBooking()" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
+          <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Add Test Booking
+        </button>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="flex space-x-3 mb-6 overflow-x-auto">
+      <button id="filterAll" class="px-4 py-2 text-sm bg-teal-600 text-white rounded-full">All</button>
+      <button id="filterPending" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Pending</button>
+      <button id="filterAccepted" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Accepted</button>
+      <button id="filterInProgress" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">In Progress</button>
+      <button id="filterCompleted" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Completed</button>
+      <button id="filterCancelled" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Cancelled</button>
+    </div>
+
+    <!-- LOADING STATE -->
+    <div id="loadingState" class="text-center py-12 hidden">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+      <p class="mt-2 text-gray-600">Loading your bookings...</p>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div id="emptyState" class="text-center py-12 hidden">
+      <i data-lucide="calendar-x" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No bookings found</h3>
+      <p class="text-gray-600 mb-4">You haven't made any bookings yet.</p>
+      <a href="index.html" class="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">
+        <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Book a Service
+      </a>
+    </div>
+
+    <!-- BOOKINGS LIST -->
+    <div id="bookingsList" class="space-y-4">
+      <!-- Bookings will be dynamically loaded here -->
+    </div>
+
+    <!-- PAGINATION -->
+    <div id="pagination" class="mt-8 flex justify-center hidden">
+      <nav class="flex space-x-2">
+        <button id="prevPage" class="px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50">
+          Previous
+        </button>
+        <span id="pageInfo" class="px-3 py-2 text-sm text-gray-600"></span>
+        <button id="nextPage" class="px-3 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50">
+          Next
+        </button>
+      </nav>
+    </div>
+  </main>
+
+  <!-- BOOKING DETAILS MODAL -->
+  <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-900">Booking Details</h3>
+          <button id="closeBookingModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        <div id="bookingDetails">
+          <!-- Booking details will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Login</h2>
+          <button id="closeLoginModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="loginEmail" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <button type="submit"
+            class="w-full py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium">
+            Login
+          </button>
+        </form>
+        <p class="text-sm text-center mt-4 text-gray-600">
+          Don't have an account? 
+          <button id="switchToRegister" class="text-teal-600 hover:underline">Sign up</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION MODAL -->
+  <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Sign Up</h2>
+          <button id="closeRegisterModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <!-- User Type Selection -->
+        <div class="mb-4 flex justify-center space-x-4">
+          <button id="customerBtn" class="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700">Customer</button>
+          <button id="taskerBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Tasker</button>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input type="text" id="registerName" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="registerEmail" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="registerPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+
+          <!-- Tasker-specific fields -->
+          <div id="taskerFields" class="hidden space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Skills (comma separated)</label>
+              <input type="text" id="registerSkills" placeholder="e.g., Plumbing, Electrical"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Hourly Rate ($)</label>
+              <input type="number" id="registerHourlyRate" min="0" step="0.01"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+              <textarea id="registerBio" rows="3" placeholder="A short bio about you"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+            </div>
+          </div>
+
+          <button type="submit"
+            class="w-full py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium">
+            Sign Up
+          </button>
+        </form>
+        <p class="text-sm text-center mt-4 text-gray-600">
+          Already have an account? 
+          <button id="switchToLogin" class="text-teal-600 hover:underline">Login</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Global state
+    let currentFilter = 'all';
+    let bookings = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let realTimeInterval = null;
+
+    // Check if user is logged in on page load
+    function checkAuthStatus() {
+      const customerId = localStorage.getItem("customerId");
+      const userName = localStorage.getItem("userName");
+      
+      console.log("Checking auth status - Customer ID:", customerId, "User Name:", userName);
+      
+      if (customerId) {
+        showUserMenu(userName);
+        loadBookings();
+      } else {
+        showAuthButtons();
+        showEmptyState();
+      }
+    }
+
+    // Show authentication buttons
+    function showAuthButtons() {
+      document.getElementById("authButtons").classList.remove("hidden");
+      document.getElementById("userMenu").classList.add("hidden");
+    }
+
+    // Show user menu
+    function showUserMenu(userName) {
+      document.getElementById("authButtons").classList.add("hidden");
+      document.getElementById("userMenu").classList.remove("hidden");
+      
+      if (userName) {
+        document.getElementById("userName").textContent = userName;
+      }
+    }
+
+    // Modal management
+    function showModal(modalId) {
+      document.getElementById(modalId).classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function hideModal(modalId) {
+      document.getElementById(modalId).classList.add("hidden");
+    }
+
+    // Event listeners for auth buttons
+    document.getElementById("loginBtn").addEventListener("click", () => showModal("loginModal"));
+    document.getElementById("registerBtn").addEventListener("click", () => showModal("registerModal"));
+
+    // Close modal buttons
+    document.getElementById("closeLoginModal").addEventListener("click", () => hideModal("loginModal"));
+    document.getElementById("closeRegisterModal").addEventListener("click", () => hideModal("registerModal"));
+    document.getElementById("closeBookingModal").addEventListener("click", () => hideModal("bookingModal"));
+
+    // Switch between login and register modals
+    document.getElementById("switchToRegister").addEventListener("click", () => {
+      hideModal("loginModal");
+      showModal("registerModal");
+    });
+    document.getElementById("switchToLogin").addEventListener("click", () => {
+      hideModal("registerModal");
+      showModal("loginModal");
+    });
+
+    // Close modals when clicking outside
+    document.getElementById("loginModal").addEventListener("click", (e) => {
+      if (e.target.id === "loginModal") hideModal("loginModal");
+    });
+    document.getElementById("registerModal").addEventListener("click", (e) => {
+      if (e.target.id === "registerModal") hideModal("registerModal");
+    });
+    document.getElementById("bookingModal").addEventListener("click", (e) => {
+      if (e.target.id === "bookingModal") hideModal("bookingModal");
+    });
+
+    // User type selection for registration
+    let userType = "customer";
+    const customerBtn = document.getElementById("customerBtn");
+    const taskerBtn = document.getElementById("taskerBtn");
+    const taskerFields = document.getElementById("taskerFields");
+
+    customerBtn.addEventListener("click", () => {
+      userType = "customer";
+      customerBtn.classList.add("bg-teal-600", "text-white");
+      customerBtn.classList.remove("bg-gray-200", "text-gray-700");
+      taskerBtn.classList.add("bg-gray-200", "text-gray-700");
+      taskerBtn.classList.remove("bg-teal-600", "text-white");
+      taskerFields.classList.add("hidden");
+    });
+
+    taskerBtn.addEventListener("click", () => {
+      userType = "tasker";
+      taskerBtn.classList.add("bg-teal-600", "text-white");
+      taskerBtn.classList.remove("bg-gray-200", "text-gray-700");
+      customerBtn.classList.add("bg-gray-200", "text-gray-700");
+      customerBtn.classList.remove("bg-teal-600", "text-white");
+      taskerFields.classList.remove("hidden");
+    });
+
+    // Login form submission
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/login/customer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          localStorage.setItem("customerId", data.user_id);
+          localStorage.setItem("userName", email.split("@")[0]);
+          hideModal("loginModal");
+          showUserMenu(email.split("@")[0]);
+          loadBookings();
+          alert("Login successful!");
+        } else {
+          alert(data.detail || "Login failed");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        alert("Login failed. Check console for details.");
+      }
+    });
+
+    // Registration form submission
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("registerName").value,
+        email: document.getElementById("registerEmail").value,
+        password: document.getElementById("registerPassword").value,
+      };
+
+      if (userType === "tasker") {
+        data.skills = document.getElementById("registerSkills").value.split(",").map(s => s.trim());
+        data.hourly_rate = parseFloat(document.getElementById("registerHourlyRate").value);
+        data.bio = document.getElementById("registerBio").value;
+      }
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/register/${userType}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          const idKey = userType === "customer" ? "user_id" : "tasker_id";
+          localStorage.setItem("customerId", result[idKey]);
+          localStorage.setItem("userName", data.name);
+          hideModal("registerModal");
+          showUserMenu(data.name);
+          loadBookings();
+          alert("Registration successful!");
+        } else {
+          alert(result.detail || "Registration failed");
+        }
+      } catch (err) {
+        console.error("Registration error:", err);
+        alert("Registration failed. Check console.");
+      }
+    });
+
+    // Logout functionality
+    function logout() {
+      localStorage.removeItem("customerId");
+      localStorage.removeItem("userName");
+      showAuthButtons();
+      showEmptyState();
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    // Load bookings from API and local storage
+    async function loadBookings() {
+      const customerId = localStorage.getItem("customerId");
+      
+      if (!customerId) {
+        console.log("No customer ID found in localStorage");
+        showEmptyState();
+        return;
+      }
+
+      console.log("Loading bookings for customer:", customerId);
+      showLoadingState();
+
+      // Load bookings from localStorage
+      const savedBookings = localStorage.getItem(`bookings_${customerId}`);
+      if (savedBookings) {
+        bookings = JSON.parse(savedBookings);
+        console.log(`Loaded ${bookings.length} saved bookings for customer ${customerId}:`, bookings);
+      } else {
+        // Initialize with empty array if no bookings exist
+        bookings = [];
+        console.log(`No saved bookings found for customer ${customerId}`);
+        
+        // Create a sample booking for demonstration
+        const sampleBooking = {
+          id: Date.now(), // Use timestamp as ID
+          task_id: 1,
+          customer_id: customerId,
+          status: "pending",
+          created_at: new Date().toISOString(),
+          task: { title: "KitchenPro Service" },
+          tasker: { name: "Bob" }
+        };
+        
+        bookings.push(sampleBooking);
+        localStorage.setItem(`bookings_${customerId}`, JSON.stringify(bookings));
+        console.log("Created sample booking for demonstration");
+      }
+      
+      displayBookings();
+    }
+
+    // Show loading state
+    function showLoadingState() {
+      document.getElementById("loadingState").classList.remove("hidden");
+      document.getElementById("emptyState").classList.add("hidden");
+      document.getElementById("bookingsList").classList.add("hidden");
+    }
+
+    // Show empty state
+    function showEmptyState() {
+      document.getElementById("loadingState").classList.add("hidden");
+      document.getElementById("emptyState").classList.remove("hidden");
+      document.getElementById("bookingsList").classList.add("hidden");
+    }
+
+    // Display bookings
+    function displayBookings() {
+      document.getElementById("loadingState").classList.add("hidden");
+      document.getElementById("emptyState").classList.add("hidden");
+      document.getElementById("bookingsList").classList.remove("hidden");
+
+      const filteredBookings = filterBookings(bookings);
+      
+      if (filteredBookings.length === 0) {
+        showEmptyState();
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedBookings = filteredBookings.slice(startIndex, endIndex);
+
+      const bookingsList = document.getElementById("bookingsList");
+      bookingsList.innerHTML = paginatedBookings.map(booking => createBookingCard(booking)).join('');
+
+      // Update pagination
+      updatePagination(filteredBookings.length);
+    }
+
+    // Filter bookings based on current filter
+    function filterBookings(bookings) {
+      if (currentFilter === 'all') return bookings;
+      
+      return bookings.filter(booking => {
+        // Check if this booking is marked as cancelled in localStorage
+        const cancelledBookings = JSON.parse(localStorage.getItem('cancelledBookings') || '[]');
+        const isCancelled = cancelledBookings.includes(booking.id);
+        const displayStatus = isCancelled ? 'cancelled' : booking.status;
+        
+        if (currentFilter === 'cancelled') {
+          return isCancelled;
+        } else {
+          return displayStatus === currentFilter;
+        }
+      });
+    }
+
+    // Create booking card HTML
+    function createBookingCard(booking) {
+      const statusColors = {
+        'pending': 'bg-yellow-100 text-yellow-800',
+        'accepted': 'bg-blue-100 text-blue-800',
+        'in-progress': 'bg-purple-100 text-purple-800',
+        'completed': 'bg-green-100 text-green-800',
+        'declined': 'bg-red-100 text-red-800',
+        'cancelled': 'bg-red-100 text-red-800' // Keep for backward compatibility
+      };
+
+      // Check if this booking is marked as cancelled in localStorage
+      const cancelledBookings = JSON.parse(localStorage.getItem('cancelledBookings') || '[]');
+      const isCancelled = cancelledBookings.includes(booking.id);
+      const displayStatus = isCancelled ? 'cancelled' : booking.status;
+      const statusColor = statusColors[displayStatus] || 'bg-gray-100 text-gray-800';
+      const createdDate = new Date(booking.created_at).toLocaleDateString();
+      
+      return `
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900">${booking.task?.title || 'Service Booking'}</h3>
+              <p class="text-sm text-gray-600">Booking ID: #${booking.id}</p>
+            </div>
+            <span class="px-3 py-1 rounded-full text-xs font-medium ${statusColor}">
+              ${displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1)}
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <p class="text-sm text-gray-600">Provider</p>
+              <p class="font-medium">${booking.tasker?.name || 'TBD'}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Created</p>
+              <p class="font-medium">${createdDate}</p>
+            </div>
+          </div>
+          
+          <div class="flex justify-between items-center">
+            <button onclick="viewBookingDetails(${booking.id})" 
+              class="px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700">
+              View Details
+            </button>
+            ${(booking.status === 'pending' || booking.status === 'accepted') && !isCancelled ? `
+            <button onclick="cancelBooking(${booking.id})" 
+              class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700">
+              Cancel
+            </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // View booking details
+    function viewBookingDetails(bookingId) {
+      const booking = bookings.find(b => b.id === bookingId);
+      if (!booking) return;
+
+      const bookingDetails = document.getElementById("bookingDetails");
+      bookingDetails.innerHTML = `
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-semibold text-gray-900">Service Details</h4>
+            <p class="text-gray-600">${booking.task?.title || 'Service Booking'}</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900">Status</h4>
+            <span class="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+            </span>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900">Provider</h4>
+            <p class="text-gray-600">${booking.tasker?.name || 'TBD'}</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900">Created</h4>
+            <p class="text-gray-600">${new Date(booking.created_at).toLocaleString()}</p>
+          </div>
+          <div>
+            <h4 class="font-semibold text-gray-900">Booking ID</h4>
+            <p class="text-gray-600">#${booking.id}</p>
+          </div>
+        </div>
+      `;
+      
+      showModal("bookingModal");
+    }
+
+    // Cancel booking - Uber-like cancellation with real-time updates
+    async function cancelBooking(bookingId) {
+      if (!confirm("Are you sure you want to cancel this booking?")) return;
+
+      try {
+        // Show loading state
+        const cancelBtn = document.querySelector(`[onclick="cancelBooking(${bookingId})"]`);
+        if (cancelBtn) {
+          cancelBtn.innerHTML = '<i class="animate-spin">⏳</i> Cancelling...';
+          cancelBtn.disabled = true;
+        }
+
+        // Update status to 'cancelled' in data
+        const booking = bookings.find(b => b.id === bookingId);
+        if (booking) {
+          booking.status = "cancelled";
+          
+          // Save updated bookings to localStorage
+          const customerId = localStorage.getItem("customerId");
+          localStorage.setItem(`bookings_${customerId}`, JSON.stringify(bookings));
+          
+          showNotification("Booking cancelled successfully!", "success");
+          
+          // Refresh display
+          displayBookings();
+        } else {
+          showNotification("Booking not found", "error");
+        }
+      } catch (error) {
+        console.error("Error cancelling booking:", error);
+        showNotification("Error cancelling booking", "error");
+      } finally {
+        // Reset button state
+        const cancelBtn = document.querySelector(`[onclick="cancelBooking(${bookingId})"]`);
+        if (cancelBtn) {
+          cancelBtn.innerHTML = 'Cancel';
+          cancelBtn.disabled = false;
+        }
+      }
+    }
+
+    // Filter functionality
+    function setupFilters() {
+      const filters = ['filterAll', 'filterPending', 'filterAccepted', 'filterInProgress', 'filterCompleted', 'filterCancelled'];
+      const filterValues = ['all', 'pending', 'accepted', 'in-progress', 'completed', 'cancelled'];
+
+      filters.forEach((filterId, index) => {
+        document.getElementById(filterId).addEventListener('click', () => {
+          // Update button states
+          filters.forEach(f => {
+            const btn = document.getElementById(f);
+            btn.classList.remove('bg-teal-600', 'text-white');
+            btn.classList.add('bg-gray-100', 'hover:bg-teal-100', 'hover:text-teal-600');
+          });
+          
+          const activeBtn = document.getElementById(filterId);
+          activeBtn.classList.add('bg-teal-600', 'text-white');
+          activeBtn.classList.remove('bg-gray-100', 'hover:bg-teal-100', 'hover:text-teal-600');
+          
+          // Update filter and display
+          currentFilter = filterValues[index];
+          currentPage = 1;
+          displayBookings();
+        });
+      });
+    }
+
+    // Pagination
+    function updatePagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      const pagination = document.getElementById("pagination");
+      
+      if (totalPages <= 1) {
+        pagination.classList.add("hidden");
+        return;
+      }
+      
+      pagination.classList.remove("hidden");
+      document.getElementById("pageInfo").textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById("prevPage").disabled = currentPage === 1;
+      document.getElementById("nextPage").disabled = currentPage === totalPages;
+    }
+
+    // Pagination event listeners
+    document.getElementById("prevPage").addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        displayBookings();
+      }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+      const totalPages = Math.ceil(filterBookings(bookings).length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        displayBookings();
+      }
+    });
+
+    // Refresh button
+    document.getElementById("refreshBtn").addEventListener("click", loadBookings);
+
+    // Search functionality (from index.html)
+    const CATEGORY_PAGES = {
+      beauty: "beauty.html",
+      cleaning: "cleaning.html",
+      repairs: "repairs.html",
+      carcare: "carcare.html",
+      appliance: "appliance.html",
+    };
+
+    function norm(s) {
+      return (s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function classifyAndRoute(rawQuery) {
+      const query = norm(rawQuery);
+      if (!query) return;
+      
+      // Simple keyword matching
+      if (query.includes('beauty') || query.includes('hair') || query.includes('spa')) {
+        window.location.href = CATEGORY_PAGES.beauty;
+      } else if (query.includes('clean')) {
+        window.location.href = CATEGORY_PAGES.cleaning;
+      } else if (query.includes('repair') || query.includes('fix')) {
+        window.location.href = CATEGORY_PAGES.repairs;
+      } else if (query.includes('car') || query.includes('auto')) {
+        window.location.href = CATEGORY_PAGES.carcare;
+      } else if (query.includes('appliance')) {
+        window.location.href = CATEGORY_PAGES.appliance;
+      } else {
+        window.location.href = CATEGORY_PAGES.cleaning; // default
+      }
+    }
+
+    // Top bar search
+    const navInput = document.getElementById("navServiceInput");
+    if (navInput) {
+      navInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          classifyAndRoute(navInput.value || "");
+        }
+      });
+    }
+
+    // Uber-like real-time features
+    function startRealTimeUpdates() {
+      if (realTimeInterval) return; // Already running
+      
+      realTimeInterval = setInterval(async () => {
+        console.log("🔄 Real-time update: Checking for booking changes...");
+        await loadBookings();
+      }, 5000); // Update every 5 seconds
+    }
+
+    function stopRealTimeUpdates() {
+      if (realTimeInterval) {
+        clearInterval(realTimeInterval);
+        realTimeInterval = null;
+      }
+    }
+
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300 ${
+        type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+        'bg-blue-500 text-white'
+      }`;
+      
+      notification.innerHTML = `
+        <div class="flex items-center">
+          <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'x-circle' : 'info'}" class="w-5 h-5 mr-2"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      lucide.createIcons();
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    // Function to add a new booking for testing
+    function addTestBooking() {
+      const customerId = localStorage.getItem("customerId");
+      if (!customerId) return;
+      
+      const newBooking = {
+        id: Date.now(),
+        task_id: Math.floor(Math.random() * 100) + 1,
+        customer_id: customerId,
+        status: "pending",
+        created_at: new Date().toISOString(),
+        task: { title: "Test Service " + Math.floor(Math.random() * 100) },
+        tasker: { name: "Test Provider" }
+      };
+      
+      const existingBookings = JSON.parse(localStorage.getItem(`bookings_${customerId}`) || '[]');
+      existingBookings.push(newBooking);
+      localStorage.setItem(`bookings_${customerId}`, JSON.stringify(existingBookings));
+      
+      // Reload bookings
+      loadBookings();
+      showNotification("Test booking added!", "success");
+    }
+
+    // Initialize with Uber-like features
+    setupFilters();
+    checkAuthStatus();
+    
+        // Start real-time updates (disabled for mock data)
+        // startRealTimeUpdates();
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      stopRealTimeUpdates();
+    });
+    
+    // Add test booking button (for development)
+    window.addTestBooking = addTestBooking;
+  </script>
+</body>
+
+</html>

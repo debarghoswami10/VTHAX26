@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bookings - Data Isolation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">🧪 Bookings Data Isolation Test</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Current User Info</h2>
+            <div id="userInfo" class="space-y-2">
+                <p><strong>Customer ID:</strong> <span id="customerId">Loading...</span></p>
+                <p><strong>User Name:</strong> <span id="userName">Loading...</span></p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">API Test Results</h2>
+            <div id="apiResults" class="space-y-4">
+                <p>Testing API calls...</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Bookings Data</h2>
+            <div id="bookingsData" class="space-y-2">
+                <p>Loading bookings...</p>
+            </div>
+        </div>
+
+        <div class="mt-6 space-x-4">
+            <button onclick="testCurrentUser()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Test Current User
+            </button>
+            <button onclick="testAllUsers()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                Test All Users
+            </button>
+            <button onclick="clearStorage()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                Clear Storage & Reload
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Test current user
+        async function testCurrentUser() {
+            const customerId = localStorage.getItem("customerId");
+            const userName = localStorage.getItem("userName");
+            
+            document.getElementById("customerId").textContent = customerId || "Not logged in";
+            document.getElementById("userName").textContent = userName || "Not logged in";
+            
+            if (customerId) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/bookings?customer_id=${customerId}`);
+                    const data = await response.json();
+                    
+                    const bookings = data.bookings || [];
+                    document.getElementById("bookingsData").innerHTML = `
+                        <p><strong>Bookings Count:</strong> ${bookings.length}</p>
+                        <div class="mt-4">
+                            ${bookings.map(booking => `
+                                <div class="border p-3 rounded mb-2">
+                                    <p><strong>ID:</strong> ${booking.id}</p>
+                                    <p><strong>Status:</strong> ${booking.status}</p>
+                                    <p><strong>Task:</strong> ${booking.task?.title || 'N/A'}</p>
+                                    <p><strong>Tasker:</strong> ${booking.tasker?.name || 'N/A'}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } catch (error) {
+                    document.getElementById("bookingsData").innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+                }
+            } else {
+                document.getElementById("bookingsData").innerHTML = "<p class="text-red-500">No customer ID found</p>";
+            }
+        }
+
+        // Test all users
+        async function testAllUsers() {
+            const testUsers = [
+                "bd00c24d-60f3-4146-a618-5f396d5ad491",
+                "326b68aa-3a5c-45fb-bf31-2dfafb8a4bab",
+                "7c930000-dc10-4f13-b897-3df4bc2fd6c9"
+            ];
+
+            let results = "<h3 class="font-semibold mb-2">All Users Test Results:</h3>";
+            
+            for (const userId of testUsers) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:8000/bookings?customer_id=${userId}`);
+                    const data = await response.json();
+                    const bookings = data.bookings || [];
+                    
+                    results += `
+                        <div class="border p-3 rounded mb-2">
+                            <p><strong>User:</strong> ${userId}</p>
+                            <p><strong>Bookings:</strong> ${bookings.length}</p>
+                            <p><strong>Status:</strong> <span class="text-green-500">✅ Working</span></p>
+                        </div>
+                    `;
+                } catch (error) {
+                    results += `
+                        <div class="border p-3 rounded mb-2">
+                            <p><strong>User:</strong> ${userId}</p>
+                            <p><strong>Status:</strong> <span class="text-red-500">❌ Error: ${error.message}</span></p>
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById("apiResults").innerHTML = results;
+        }
+
+        // Clear storage and reload
+        function clearStorage() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        // Auto-run tests on page load
+        window.onload = function() {
+            testCurrentUser();
+            testAllUsers();
+        };
+    </script>
+</body>
+</html>

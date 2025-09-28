@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Woke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-50">
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
+        <span class="font-bold text-xl text-gray-900">woke</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
+        </a>
+        <div class="relative w-64">
+          <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+          <input id="navServiceInput" placeholder="Search services..."
+            class="pl-9 pr-3 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-teal-500 rounded-lg w-full bg-white"
+            autocomplete="off" />
+        </div>
+        <a href="bookings.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="calendar" class="w-4 h-4 mr-1"></i> My Bookings
+        </a>
+        <a href="profile.html" class="flex items-center text-teal-600 font-medium">
+          <i data-lucide="user" class="w-4 h-4 mr-1"></i> Profile
+        </a>
+        <!-- Auth Buttons -->
+        <div id="authButtons" class="flex items-center space-x-2">
+          <button id="loginBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+            Login
+          </button>
+          <button id="registerBtn" class="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-md hover:bg-teal-700">
+            Sign Up
+          </button>
+        </div>
+        <!-- User Menu (hidden by default) -->
+        <div id="userMenu" class="hidden flex items-center space-x-2">
+          <span id="userName" class="text-sm font-medium text-gray-700"></span>
+          <button id="logoutBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+            Logout
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="flex items-center space-x-6">
+        <!-- Profile Avatar -->
+        <div class="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center">
+          <i data-lucide="user" class="w-10 h-10 text-teal-600"></i>
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="flex-1">
+          <h1 id="profileName" class="text-2xl font-bold text-gray-900">Loading...</h1>
+          <p id="profileEmail" class="text-gray-600">Loading...</p>
+          <div class="flex items-center space-x-4 mt-2">
+            <span class="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm font-medium">
+              <i data-lucide="shield-check" class="w-4 h-4 inline mr-1"></i>
+              Verified Customer
+            </span>
+            <span id="memberSince" class="text-sm text-gray-500">Member since 2024</span>
+          </div>
+        </div>
+
+        <!-- Edit Profile Button -->
+        <button id="editProfileBtn" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition">
+          <i data-lucide="edit" class="w-4 h-4 inline mr-2"></i>
+          Edit Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="max-w-2xl mx-auto space-y-6">
+      <!-- Personal Information -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Personal Information</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input type="text" id="fullName" value="Loading..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" disabled />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input type="email" id="email" value="Loading..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" disabled />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" id="phone" value="Loading..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" disabled />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <textarea id="address" rows="3" placeholder="Enter your address"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" disabled></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <div class="space-y-3">
+          <a href="bookings.html" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+            <i data-lucide="calendar" class="w-5 h-5 text-teal-600 mr-3"></i>
+            <span class="font-medium">View My Bookings</span>
+          </a>
+          <a href="index.html" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+            <i data-lucide="search" class="w-5 h-5 text-teal-600 mr-3"></i>
+            <span class="font-medium">Book New Service</span>
+          </a>
+          <button id="changePasswordBtn" class="w-full flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+            <i data-lucide="key" class="w-5 h-5 text-teal-600 mr-3"></i>
+            <span class="font-medium">Change Password</span>
+          </button>
+          <button id="deleteAccountBtn" class="w-full flex items-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition text-red-600">
+            <i data-lucide="trash-2" class="w-5 h-5 text-red-600 mr-3"></i>
+            <span class="font-medium">Delete Account</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Edit Profile</h2>
+          <button id="closeEditModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <form id="editProfileForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <input type="text" id="editFullName" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <input type="tel" id="editPhone"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <textarea id="editAddress" rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+          </div>
+          
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="flex-1 bg-teal-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-teal-700">
+              Save Changes
+            </button>
+            <button type="button" id="cancelEdit" class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="changePasswordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Change Password</h2>
+          <button id="closePasswordModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <form id="changePasswordForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+            <input type="password" id="currentPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+            <input type="password" id="newPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+            <input type="password" id="confirmPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          
+          <div class="flex space-x-3 pt-4">
+            <button type="submit" class="flex-1 bg-teal-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-teal-700">
+              Change Password
+            </button>
+            <button type="button" id="cancelPassword" class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Login</h2>
+          <button id="closeLoginModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="loginEmail" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <button type="submit"
+            class="w-full py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium">
+            Login
+          </button>
+        </form>
+        <p class="text-sm text-center mt-4 text-gray-600">
+          Don't have an account? 
+          <button id="switchToRegister" class="text-teal-600 hover:underline">Sign up</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION MODAL -->
+  <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Sign Up</h2>
+          <button id="closeRegisterModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <!-- User Type Selection -->
+        <div class="mb-4 flex justify-center space-x-4">
+          <button id="customerBtn" class="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700">Customer</button>
+          <button id="taskerBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Tasker</button>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input type="text" id="registerName" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="registerEmail" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="registerPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+
+          <!-- Tasker-specific fields -->
+          <div id="taskerFields" class="hidden space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Skills (comma separated)</label>
+              <input type="text" id="registerSkills" placeholder="e.g., Plumbing, Electrical"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Hourly Rate ($)</label>
+              <input type="number" id="registerHourlyRate" min="0" step="0.01"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+              <textarea id="registerBio" rows="3" placeholder="A short bio about you"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+            </div>
+          </div>
+
+          <button type="submit"
+            class="w-full py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium">
+            Sign Up
+          </button>
+        </form>
+        <p class="text-sm text-center mt-4 text-gray-600">
+          Already have an account? 
+          <button id="switchToLogin" class="text-teal-600 hover:underline">Login</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Global state
+    let userProfile = null;
+    let userBookings = [];
+
+    // Check if user is logged in on page load
+    function checkAuthStatus() {
+      const customerId = localStorage.getItem("customerId");
+      const userName = localStorage.getItem("userName");
+      
+      if (customerId) {
+        showUserMenu(userName);
+        loadUserProfile();
+      } else {
+        showAuthButtons();
+        showLoginPrompt();
+      }
+    }
+
+    // Show authentication buttons
+    function showAuthButtons() {
+      document.getElementById("authButtons").classList.remove("hidden");
+      document.getElementById("userMenu").classList.add("hidden");
+    }
+
+    // Show user menu
+    function showUserMenu(userName) {
+      document.getElementById("authButtons").classList.add("hidden");
+      document.getElementById("userMenu").classList.remove("hidden");
+      
+      if (userName) {
+        document.getElementById("userName").textContent = userName;
+      }
+    }
+
+    // Show login prompt when not authenticated
+    function showLoginPrompt() {
+      const mainContent = document.querySelector('main');
+      mainContent.innerHTML = `
+        <div class="text-center py-16">
+          <i data-lucide="user-x" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">Please Login</h2>
+          <p class="text-gray-600 mb-6">You need to be logged in to view your profile.</p>
+          <button id="loginPromptBtn" class="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-medium">
+            Login Now
+          </button>
+        </div>
+      `;
+      lucide.createIcons();
+      
+      document.getElementById("loginPromptBtn").addEventListener("click", () => {
+        showModal("loginModal");
+      });
+    }
+
+    // Load user profile data from database
+    async function loadUserProfile() {
+      const customerId = localStorage.getItem("customerId");
+      const userName = localStorage.getItem("userName");
+      
+      if (!customerId) return;
+
+      try {
+        // Fetch user profile from database
+        const response = await fetch(`http://127.0.0.1:8000/profiles/${customerId}`);
+        
+        if (response.ok) {
+          const profileData = await response.json();
+          // Get additional info from localStorage
+          const storedProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+          
+          userProfile = {
+            name: profileData.name || userName || "User",
+            email: "user@example.com", // Email is stored in auth, not profiles table
+            phone: storedProfile.phone || "",
+            address: storedProfile.address || "",
+            memberSince: new Date(profileData.created_at || Date.now()).getFullYear().toString()
+          };
+        } else {
+          // Fallback to stored data if API fails
+          const storedProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+          userProfile = {
+            name: userName || "User",
+            email: "user@example.com",
+            phone: storedProfile.phone || "",
+            address: storedProfile.address || "",
+            memberSince: "2024"
+          };
+        }
+
+        displayUserProfile();
+      } catch (error) {
+        console.error("Error loading profile:", error);
+        // Fallback to stored data
+        userProfile = {
+          name: userName || "User",
+          email: "user@example.com",
+          phone: "",
+          address: "",
+          memberSince: "2024"
+        };
+        displayUserProfile();
+      }
+    }
+
+    // Display user profile
+    function displayUserProfile() {
+      if (!userProfile) return;
+
+      document.getElementById("profileName").textContent = userProfile.name;
+      document.getElementById("profileEmail").textContent = userProfile.email;
+      document.getElementById("memberSince").textContent = `Member since ${userProfile.memberSince}`;
+      
+      document.getElementById("fullName").value = userProfile.name;
+      document.getElementById("email").value = userProfile.email;
+      document.getElementById("phone").value = userProfile.phone;
+      document.getElementById("address").value = userProfile.address;
+    }
+
+
+    // Modal management
+    function showModal(modalId) {
+      document.getElementById(modalId).classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function hideModal(modalId) {
+      document.getElementById(modalId).classList.add("hidden");
+    }
+
+    // Event listeners for auth buttons
+    document.getElementById("loginBtn").addEventListener("click", () => showModal("loginModal"));
+    document.getElementById("registerBtn").addEventListener("click", () => showModal("registerModal"));
+
+    // Close modal buttons
+    document.getElementById("closeLoginModal").addEventListener("click", () => hideModal("loginModal"));
+    document.getElementById("closeRegisterModal").addEventListener("click", () => hideModal("registerModal"));
+    document.getElementById("closeEditModal").addEventListener("click", () => hideModal("editProfileModal"));
+    document.getElementById("closePasswordModal").addEventListener("click", () => hideModal("changePasswordModal"));
+
+    // Switch between login and register modals
+    document.getElementById("switchToRegister").addEventListener("click", () => {
+      hideModal("loginModal");
+      showModal("registerModal");
+    });
+    document.getElementById("switchToLogin").addEventListener("click", () => {
+      hideModal("registerModal");
+      showModal("loginModal");
+    });
+
+    // Edit profile functionality
+    document.getElementById("editProfileBtn").addEventListener("click", () => {
+      // Pre-fill edit form
+      document.getElementById("editFullName").value = userProfile?.name || "";
+      document.getElementById("editPhone").value = userProfile?.phone || "";
+      document.getElementById("editAddress").value = userProfile?.address || "";
+      showModal("editProfileModal");
+    });
+
+    document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const customerId = localStorage.getItem("customerId");
+      if (!customerId) {
+        alert("Please login to update your profile");
+        return;
+      }
+
+      try {
+        const newName = document.getElementById("editFullName").value;
+        const newPhone = document.getElementById("editPhone").value;
+        const newAddress = document.getElementById("editAddress").value;
+
+        // Update name in database
+        const response = await fetch(`http://127.0.0.1:8000/profiles/${customerId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: newName
+          })
+        });
+
+        if (response.ok) {
+          // Update local profile data
+          userProfile.name = newName;
+          userProfile.phone = newPhone;
+          userProfile.address = newAddress;
+          
+          // Store additional info in localStorage
+          localStorage.setItem('userProfile', JSON.stringify({
+            phone: newPhone,
+            address: newAddress
+          }));
+          
+          // Update display
+          displayUserProfile();
+          
+          // Hide modal
+          hideModal("editProfileModal");
+          
+          alert("Profile updated successfully!");
+        } else {
+          const error = await response.json();
+          alert(error.detail || "Failed to update profile");
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Failed to update profile. Please try again.");
+      }
+    });
+
+    document.getElementById("cancelEdit").addEventListener("click", () => hideModal("editProfileModal"));
+
+    // Change password functionality
+    document.getElementById("changePasswordBtn").addEventListener("click", () => {
+      showModal("changePasswordModal");
+    });
+
+    document.getElementById("changePasswordForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      const newPassword = document.getElementById("newPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      
+      if (newPassword !== confirmPassword) {
+        alert("Passwords don't match!");
+        return;
+      }
+      
+      // In a real app, you'd send this to the backend
+      alert("Password changed successfully!");
+      hideModal("changePasswordModal");
+    });
+
+    document.getElementById("cancelPassword").addEventListener("click", () => hideModal("changePasswordModal"));
+
+    // Delete account functionality
+    document.getElementById("deleteAccountBtn").addEventListener("click", () => {
+      if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+        // In a real app, you'd send this to the backend
+        alert("Account deletion requested. Please contact support.");
+      }
+    });
+
+    // Login form submission
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/login/customer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          localStorage.setItem("customerId", data.user_id);
+          localStorage.setItem("userName", email.split("@")[0]);
+          hideModal("loginModal");
+          location.reload(); // Reload to show profile
+        } else {
+          alert(data.detail || "Login failed");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        alert("Login failed. Check console for details.");
+      }
+    });
+
+    // Registration form submission
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("registerName").value,
+        email: document.getElementById("registerEmail").value,
+        password: document.getElementById("registerPassword").value,
+      };
+
+      if (userType === "tasker") {
+        data.skills = document.getElementById("registerSkills").value.split(",").map(s => s.trim());
+        data.hourly_rate = parseFloat(document.getElementById("registerHourlyRate").value);
+        data.bio = document.getElementById("registerBio").value;
+      }
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/register/${userType}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          const idKey = userType === "customer" ? "user_id" : "tasker_id";
+          localStorage.setItem("customerId", result[idKey]);
+          localStorage.setItem("userName", data.name);
+          hideModal("registerModal");
+          location.reload(); // Reload to show profile
+        } else {
+          alert(result.detail || "Registration failed");
+        }
+      } catch (err) {
+        console.error("Registration error:", err);
+        alert("Registration failed. Check console.");
+      }
+    });
+
+    // User type selection for registration
+    let userType = "customer";
+    const customerBtn = document.getElementById("customerBtn");
+    const taskerBtn = document.getElementById("taskerBtn");
+    const taskerFields = document.getElementById("taskerFields");
+
+    customerBtn.addEventListener("click", () => {
+      userType = "customer";
+      customerBtn.classList.add("bg-teal-600", "text-white");
+      customerBtn.classList.remove("bg-gray-200", "text-gray-700");
+      taskerBtn.classList.add("bg-gray-200", "text-gray-700");
+      taskerBtn.classList.remove("bg-teal-600", "text-white");
+      taskerFields.classList.add("hidden");
+    });
+
+    taskerBtn.addEventListener("click", () => {
+      userType = "tasker";
+      taskerBtn.classList.add("bg-teal-600", "text-white");
+      taskerBtn.classList.remove("bg-gray-200", "text-gray-700");
+      customerBtn.classList.add("bg-gray-200", "text-gray-700");
+      customerBtn.classList.remove("bg-teal-600", "text-white");
+      taskerFields.classList.remove("hidden");
+    });
+
+    // Logout functionality
+    function logout() {
+      localStorage.removeItem("customerId");
+      localStorage.removeItem("userName");
+      location.reload();
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    // Search functionality (from index.html)
+    const CATEGORY_PAGES = {
+      beauty: "beauty.html",
+      cleaning: "cleaning.html",
+      repairs: "repairs.html",
+      carcare: "carcare.html",
+      appliance: "appliance.html",
+    };
+
+    function norm(s) {
+      return (s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function classifyAndRoute(rawQuery) {
+      const query = norm(rawQuery);
+      if (!query) return;
+      
+      // Simple keyword matching
+      if (query.includes('beauty') || query.includes('hair') || query.includes('spa')) {
+        window.location.href = CATEGORY_PAGES.beauty;
+      } else if (query.includes('clean')) {
+        window.location.href = CATEGORY_PAGES.cleaning;
+      } else if (query.includes('repair') || query.includes('fix')) {
+        window.location.href = CATEGORY_PAGES.repairs;
+      } else if (query.includes('car') || query.includes('auto')) {
+        window.location.href = CATEGORY_PAGES.carcare;
+      } else if (query.includes('appliance')) {
+        window.location.href = CATEGORY_PAGES.appliance;
+      } else {
+        window.location.href = CATEGORY_PAGES.cleaning; // default
+      }
+    }
+
+    // Top bar search
+    const navInput = document.getElementById("navServiceInput");
+    if (navInput) {
+      navInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          classifyAndRoute(navInput.value || "");
+        }
+      });
+    }
+
+    // Initialize
+    checkAuthStatus();
+  </script>
+</body>
+
+</html>

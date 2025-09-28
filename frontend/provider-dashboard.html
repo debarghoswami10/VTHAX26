@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Dashboard - Woke</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="provider-dashboard.html" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-teal-600 to-teal-700 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">W</span>
+                    </div>
+                    <span class="text-2xl font-extrabold text-gray-900">woke</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-2">
+                    <a href="provider-dashboard.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-teal-600 bg-teal-50">
+                        <i data-lucide="home" class="w-4 h-4"></i><span>Dashboard</span>
+                    </a>
+                    <a href="provider-bookings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                        <i data-lucide="calendar" class="w-4 h-4"></i><span>Bookings</span>
+                    </a>
+                    <a href="provider-profile.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                        <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
+                    </a>
+                    <a href="provider-earnings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                        <i data-lucide="dollar-sign" class="w-4 h-4"></i><span>Earnings</span>
+                    </a>
+                </nav>
+
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-semibold text-sm" id="userInitials">JD</span>
+                            </div>
+                            <span id="userName">John Doe</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="provider-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
+                            <a href="provider-earnings.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Earnings</a>
+                            <hr class="my-1">
+                            <button onclick="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden rounded-md p-2 hover:bg-gray-100">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Nav -->
+            <div id="mobileMenu" class="hidden md:hidden py-4 space-y-2 border-t">
+                <a href="provider-dashboard.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-teal-600 bg-teal-50">
+                    <i data-lucide="home" class="w-4 h-4"></i><span>Dashboard</span>
+                </a>
+                <a href="provider-bookings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                    <i data-lucide="calendar" class="w-4 h-4"></i><span>Bookings</span>
+                </a>
+                <a href="provider-profile.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                    <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
+                </a>
+                <a href="provider-earnings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                    <i data-lucide="dollar-sign" class="w-4 h-4"></i><span>Earnings</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Welcome back, <span id="welcomeName">John</span>!</h1>
+            <p class="text-gray-600 mt-2">Here's what's happening with your business today.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Bookings -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="calendar" class="w-5 h-5 text-teal-600"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Total Bookings</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalBookings">24</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Bookings -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="clock" class="w-5 h-5 text-yellow-600"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Pending</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="pendingBookings">3</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Today -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Completed Today</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="completedToday">2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Earnings -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="dollar-sign" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Total Earnings</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalEarnings">$1,240</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Recent Bookings -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900">Recent Bookings</h2>
+                            <a href="provider-bookings.html" class="text-sm text-teal-600 hover:text-teal-700 font-medium">View all</a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="recentBookingsList" class="space-y-4">
+                            <!-- Booking items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions & Profile -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button onclick="updateAvailability()" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            <i data-lucide="clock" class="w-4 h-4 mr-2"></i>
+                            Update Availability
+                        </button>
+                        <button onclick="viewEarnings()" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            <i data-lucide="dollar-sign" class="w-4 h-4 mr-2"></i>
+                            View Earnings
+                        </button>
+                        <button onclick="editProfile()" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            <i data-lucide="edit" class="w-4 h-4 mr-2"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Summary -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Profile Summary</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Rating</span>
+                            <div class="flex items-center">
+                                <i data-lucide="star" class="w-4 h-4 text-yellow-400 mr-1"></i>
+                                <span class="text-sm font-medium text-gray-900" id="providerRating">4.8</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Hourly Rate</span>
+                            <span class="text-sm font-medium text-gray-900" id="hourlyRate">$25/hr</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Services</span>
+                            <span class="text-sm font-medium text-gray-900" id="serviceCount">5</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Status</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" id="status">Available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Check authentication
+        function checkAuth() {
+            const providerId = localStorage.getItem("providerId");
+            const providerName = localStorage.getItem("providerName");
+            
+            if (!providerId) {
+                window.location.href = "provider-login.html";
+                return;
+            }
+            
+            // Update UI with provider info
+            document.getElementById("userName").textContent = providerName || "Provider";
+            document.getElementById("welcomeName").textContent = providerName || "Provider";
+            document.getElementById("userInitials").textContent = (providerName || "P").charAt(0).toUpperCase();
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            const providerId = localStorage.getItem("providerId");
+            if (!providerId) return;
+
+            try {
+                // Load bookings
+                const bookingsResponse = await fetch(`http://127.0.0.1:8000/bookings?provider_id=${providerId}`);
+                const bookingsData = await bookingsResponse.json();
+                
+                if (bookingsResponse.ok) {
+                    const bookings = bookingsData.bookings || [];
+                    updateStats(bookings);
+                    displayRecentBookings(bookings);
+                }
+
+                // Load provider profile
+                const profileResponse = await fetch(`http://127.0.0.1:8000/profiles/${providerId}`);
+                const profileData = await profileResponse.json();
+                
+                if (profileResponse.ok) {
+                    updateProfileSummary(profileData);
+                }
+
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+            }
+        }
+
+        // Update statistics
+        function updateStats(bookings) {
+            const total = bookings.length;
+            const pending = bookings.filter(b => b.status === 'pending').length;
+            const completed = bookings.filter(b => b.status === 'completed').length;
+            
+            document.getElementById("totalBookings").textContent = total;
+            document.getElementById("pendingBookings").textContent = pending;
+            document.getElementById("completedToday").textContent = completed;
+            
+            // Calculate earnings (simplified)
+            const earnings = bookings
+                .filter(b => b.status === 'completed')
+                .reduce((sum, b) => sum + (b.hourly_rate || 25), 0);
+            document.getElementById("totalEarnings").textContent = `$${earnings}`;
+        }
+
+        // Display recent bookings
+        function displayRecentBookings(bookings) {
+            const container = document.getElementById("recentBookingsList");
+            const recentBookings = bookings.slice(0, 5);
+            
+            if (recentBookings.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No bookings yet</p>';
+                return;
+            }
+            
+            container.innerHTML = recentBookings.map(booking => `
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div class="flex-1">
+                        <h4 class="font-medium text-gray-900">${booking.task?.title || 'Service'}</h4>
+                        <p class="text-sm text-gray-500">${booking.customer_name || 'Customer'}</p>
+                        <p class="text-xs text-gray-400">${new Date(booking.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(booking.status)}">
+                            ${booking.status}
+                        </span>
+                        <button onclick="viewBooking('${booking.id}')" class="text-teal-600 hover:text-teal-700 text-sm font-medium">
+                            View
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Get status color
+        function getStatusColor(status) {
+            switch (status) {
+                case 'pending': return 'bg-yellow-100 text-yellow-800';
+                case 'accepted': return 'bg-blue-100 text-blue-800';
+                case 'completed': return 'bg-green-100 text-green-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // Update profile summary
+        function updateProfileSummary(profile) {
+            document.getElementById("providerRating").textContent = profile.rating || "4.8";
+            document.getElementById("hourlyRate").textContent = `$${profile.hourly_rate || 25}/hr`;
+            document.getElementById("serviceCount").textContent = profile.skills?.length || 0;
+            document.getElementById("status").textContent = profile.availability || "Available";
+        }
+
+        // Quick action functions
+        function updateAvailability() {
+            // TODO: Implement availability update
+            alert("Availability update feature coming soon!");
+        }
+
+        function viewEarnings() {
+            window.location.href = "provider-earnings.html";
+        }
+
+        function editProfile() {
+            window.location.href = "provider-profile.html";
+        }
+
+        function viewBooking(bookingId) {
+            window.location.href = `provider-booking-detail.html?id=${bookingId}`;
+        }
+
+        // User menu toggle
+        document.getElementById("userMenuBtn").addEventListener("click", function() {
+            const menu = document.getElementById("userMenu");
+            menu.classList.toggle("hidden");
+        });
+
+        // Close user menu when clicking outside
+        document.addEventListener("click", function(e) {
+            const menu = document.getElementById("userMenu");
+            const btn = document.getElementById("userMenuBtn");
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add("hidden");
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById("mobileMenuBtn").addEventListener("click", function() {
+            const menu = document.getElementById("mobileMenu");
+            menu.classList.toggle("hidden");
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("providerId");
+            localStorage.removeItem("providerName");
+            window.location.href = "provider-login.html";
+        }
+
+        // Initialize dashboard
+        checkAuth();
+        loadDashboardData();
+    </script>
+</body>
+</html>

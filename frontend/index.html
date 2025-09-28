@@ -61,15 +61,39 @@
             <input id="navServiceInput" placeholder="Search services..."
               class="pl-9 pr-3 py-2 text-sm border border-gray-300 focus:ring-2 focus:ring-teal-500 rounded-lg w-full bg-white"
               autocomplete="off" />
+            <!-- Dropdown -->
+            <ul id="navServiceDropdown"
+              class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto">
+            </ul>
           </div>
-          <a href="#bookings"
+          <a href="bookings.html" id="bookingsLink"
             class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="calendar" class="w-4 h-4"></i><span>My Bookings</span>
           </a>
-          <a href="#profile"
+          <a href="profile.html" id="profileLink"
             class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
             <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
           </a>
+          <a href="provider-login.html"
+            class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+            <i data-lucide="briefcase" class="w-4 h-4"></i><span>Provider Login</span>
+          </a>
+          <!-- Auth Buttons -->
+          <div id="authButtons" class="flex items-center space-x-2">
+            <button id="loginBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+              Login
+            </button>
+            <button id="registerBtn" class="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-md hover:bg-teal-700">
+              Sign Up
+            </button>
+          </div>
+          <!-- User Menu (hidden by default) -->
+          <div id="userMenu" class="hidden flex items-center space-x-2">
+            <span id="userName" class="text-sm font-medium text-gray-700"></span>
+            <button id="logoutBtn" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+              Logout
+            </button>
+          </div>
         </nav>
 
         <!-- Mobile Menu Button -->
@@ -88,14 +112,36 @@
           class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="search" class="w-4 h-4"></i><span>Services</span>
         </a>
-        <a href="#bookings"
+        <a href="bookings.html" id="mobileBookingsLink"
           class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="calendar" class="w-4 h-4"></i><span>My Bookings</span>
         </a>
-        <a href="#profile"
+        <a href="profile.html" id="mobileProfileLink"
           class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
           <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
         </a>
+        <a href="provider-login.html"
+          class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+          <i data-lucide="briefcase" class="w-4 h-4"></i><span>Provider Login</span>
+        </a>
+        <!-- Mobile Auth Buttons -->
+        <div id="mobileAuthButtons" class="pt-2 border-t">
+          <button id="mobileLoginBtn" class="w-full text-left px-3 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+            Login
+          </button>
+          <button id="mobileRegisterBtn" class="w-full text-left px-3 py-2 text-sm font-medium text-teal-600 hover:bg-teal-50 rounded-md">
+            Sign Up
+          </button>
+        </div>
+        <!-- Mobile User Menu (hidden by default) -->
+        <div id="mobileUserMenu" class="hidden pt-2 border-t">
+          <div class="px-3 py-2 text-sm font-medium text-gray-700">
+            Welcome, <span id="mobileUserName"></span>
+          </div>
+          <button id="mobileLogoutBtn" class="w-full text-left px-3 py-2 text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50 rounded-md">
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -288,104 +334,113 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Card 1 -->
-          <article
-            class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
-            <div class="relative">
-              <img src='https://i.pinimg.com/736x/02/6c/cc/026ccc42b200f7e36b23668253d4b1e5.jpg' alt="Massage & Spa"
-                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-              <span
-                class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-lg inline-flex items-center gap-1">
-                <i data-lucide="trending-up" class="w-3 h-3"></i> Popular
-              </span>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div class="p-4">
-              <div class="flex items-start justify-between mb-2">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Massage & Spa
-                </h3>
-                <div class="flex items-center space-x-1 text-sm text-amber-600">
-                  <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.8</span>
-                </div>
+          <a href="beauty.html" class="block">
+            <article
+              class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
+              <div class="relative">
+                <img src='https://i.pinimg.com/736x/02/6c/cc/026ccc42b200f7e36b23668253d4b1e5.jpg' alt="Massage & Spa"
+                  class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                <span
+                  class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-lg inline-flex items-center gap-1">
+                  <i data-lucide="trending-up" class="w-3 h-3"></i> Popular
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Relaxing full-body massage by certified therapists at
-                your home.</p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                  <div class="text-lg font-bold text-teal-600">$60-$200</div>
-                  <div class="flex items-center text-sm text-gray-500">
-                    <i data-lucide="clock" class="w-4 h-4 mr-1"></i>60m
+              <div class="p-4">
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Massage & Spa
+                  </h3>
+                  <div class="flex items-center space-x-1 text-sm text-amber-600">
+                    <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.8</span>
                   </div>
                 </div>
-                <a href="#book"
-                  class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book
-                  Now</a>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                  Relaxing full-body massage by certified therapists at your home.
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <div class="text-lg font-bold text-teal-600">$60-$200</div>
+                    <div class="flex items-center text-sm text-gray-500">
+                      <i data-lucide="clock" class="w-4 h-4 mr-1"></i>60m
+                    </div>
+                  </div>
+                  <span class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">
+                    Book Now
+                  </span>
+                </div>
               </div>
-              <div class="mt-3 text-xs text-gray-500">1200 people booked this service</div>
-            </div>
-          </article>
+            </article>
+          </a>
 
           <!-- Card 2 -->
-          <article
-            class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
-            <div class="relative">
-              <img src='https://i.pinimg.com/1200x/90/94/da/9094dadea3bad016bf1c97dee3083490.jpg' alt="Home Cleaning"
-                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div class="p-4">
-              <div class="flex items-start justify-between mb-2">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Home Cleaning
-                </h3>
-                <div class="flex items-center space-x-1 text-sm text-amber-600">
-                  <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.9</span>
-                </div>
+          <a href="cleaning.html" class="block">
+            <article
+              class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
+              <div class="relative">
+                <img src='https://i.pinimg.com/1200x/90/94/da/9094dadea3bad016bf1c97dee3083490.jpg' alt="Home Cleaning"
+                  class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Deep clean for kitchen, bathrooms, bedrooms, and common
-                areas.</p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                  <div class="text-lg font-bold text-teal-600">$120-$500</div>
-                  <div class="flex items-center text-sm text-gray-500">
-                    <i data-lucide="clock" class="w-4 h-4 mr-1"></i>90m
+              <div class="p-4">
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Home Cleaning
+                  </h3>
+                  <div class="flex items-center space-x-1 text-sm text-amber-600">
+                    <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.9</span>
                   </div>
                 </div>
-                <a href="#book"
-                  class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book
-                  Now</a>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                  Deep clean for kitchen, bathrooms, bedrooms, and common areas.
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <div class="text-lg font-bold text-teal-600">$120-$500</div>
+                    <div class="flex items-center text-sm text-gray-500">
+                      <i data-lucide="clock" class="w-4 h-4 mr-1"></i>90m
+                    </div>
+                  </div>
+                  <span class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">
+                    Book Now
+                  </span>
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </a>
+
 
           <!-- Card 3 -->
-          <article
-            class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
-            <div class="relative">
-              <img src='https://i.pinimg.com/736x/04/b1/cf/04b1cff128af90daa74b1b11036a2ed9.jpg' alt="Car Wash"
-                class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-            </div>
-            <div class="p-4">
-              <div class="flex items-start justify-between mb-2">
-                <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Car Wash</h3>
-                <div class="flex items-center space-x-1 text-sm text-amber-600">
-                  <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.7</span>
-                </div>
+          <a href="carcare.html" class="block">
+            <article
+              class="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-md overflow-hidden bg-white rounded-xl">
+              <div class="relative">
+                <img src='https://i.pinimg.com/736x/04/b1/cf/04b1cff128af90daa74b1b11036a2ed9.jpg' alt="Car Wash"
+                  class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-              <p class="text-sm text-gray-600 mb-3 line-clamp-2">Exterior foam wash + interior vacuum + tyre & dash
-                dressing.</p>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                  <div class="text-lg font-bold text-teal-600">$70-$350</div>
-                  <div class="flex items-center text-sm text-gray-500">
-                    <i data-lucide="clock" class="w-4 h-4 mr-1"></i>45m
+              <div class="p-4">
+                <div class="flex items-start justify-between mb-2">
+                  <h3 class="font-bold text-lg text-gray-900 group-hover:text-teal-600 transition-colors">Car Wash</h3>
+                  <div class="flex items-center space-x-1 text-sm text-amber-600">
+                    <i data-lucide="star" class="w-4 h-4"></i><span class="font-medium">4.7</span>
                   </div>
                 </div>
-                <a href="#book"
-                  class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">Book
-                  Now</a>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                  Exterior foam wash + interior vacuum + tyre & dash dressing.
+                </p>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <div class="text-lg font-bold text-teal-600">$70-$350</div>
+                    <div class="flex items-center text-sm text-gray-500">
+                      <i data-lucide="clock" class="w-4 h-4 mr-1"></i>45m
+                    </div>
+                  </div>
+                  <span class="bg-teal-600 hover:bg-teal-700 text-white rounded-full px-5 py-2 text-sm font-semibold">
+                    Book Now
+                  </span>
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </a>
         </div>
       </div>
     </section>
@@ -444,19 +499,20 @@
         <div>
           <h3 class="font-semibold text-gray-900 mb-4">Services</h3>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li>Beauty & Wellness</li>
-            <li>Home Repairs</li>
-            <li>Cleaning Services</li>
-            <li>Car Care</li>
+            <li><a href="beauty.html" class="hover:text-teal-600 transition-colors">Beauty & Wellness</a></li>
+            <li><a href="repairs.html" class="hover:text-teal-600 transition-colors">Home Repairs</a></li>
+            <li><a href="cleaning.html" class="hover:text-teal-600 transition-colors">Cleaning Services</a></li>
+            <li><a href="carcare.html" class="hover:text-teal-600 transition-colors">Car Care</a></li>
+            <li><a href="appliance.html" class="hover:text-teal-600 transition-colors">Appliance Repair</a></li>
           </ul>
         </div>
         <div>
           <h3 class="font-semibold text-gray-900 mb-4">Support</h3>
           <ul class="space-y-2 text-sm text-gray-600">
-            <li>Help Center</li>
-            <li>Contact Us</li>
-            <li>Safety</li>
-            <li>Privacy Policy</li>
+            <li><a href="help-center.html" class="hover:text-teal-600 transition-colors">Help Center</a></li>
+            <li><a href="contact.html" class="hover:text-teal-600 transition-colors">Contact Us</a></li>
+            <li><a href="safety.html" class="hover:text-teal-600 transition-colors">Safety</a></li>
+            <li><a href="privacy-policy.html" class="hover:text-teal-600 transition-colors">Privacy Policy</a></li>
           </ul>
         </div>
       </div>
@@ -465,6 +521,106 @@
       </div>
     </div>
   </footer>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Login</h2>
+          <button id="closeLoginModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="loginEmail" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="loginPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <button type="submit"
+            class="w-full py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium">
+            Login
+          </button>
+        </form>
+        <p class="text-sm text-center mt-4 text-gray-600">
+          Don't have an account? 
+          <button id="switchToRegister" class="text-teal-600 hover:underline">Sign up</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration Modal -->
+  <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Sign Up</h2>
+          <button id="closeRegisterModal" class="text-gray-400 hover:text-gray-600">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </div>
+        
+        <!-- User Type Selection -->
+        <div class="mb-4 flex justify-center space-x-4">
+          <button id="customerBtn" class="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700">Customer</button>
+          <button id="taskerBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Tasker</button>
+        </div>
+
+        <form id="registerForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input type="text" id="registerName" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="registerEmail" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="registerPassword" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+
+          <!-- Tasker-specific fields -->
+          <div id="taskerFields" class="hidden space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Skills (comma separated)</label>
+              <input type="text" id="registerSkills" placeholder="e.g., Plumbing, Electrical"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Hourly Rate ($)</label>
+              <input type="number" id="registerHourlyRate" min="0" step="0.01"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+              <textarea id="registerBio" rows="3" placeholder="A short bio about you"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+            </div>
+          </div>
+
+          <button type="submit"
+            class="w-full py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 font-medium">
+            Sign Up
+          </button>
+        </form>
+        <p class="text-sm text-center mt-4 text-gray-600">
+          Already have an account? 
+          <button id="switchToLogin" class="text-teal-600 hover:underline">Login</button>
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- Tiny JS for icons + interactions -->
   <script>
@@ -484,15 +640,165 @@
       lucide.createIcons();
     });
 
-    // Fake search handler (navigates to a pretend services URL)
-    document.getElementById('searchForm').addEventListener('submit', (e) => {
+    // --- CATEGORY ROUTING + FUZZY CLASSIFIER ---
+
+    const CATEGORY_PAGES = {
+      beauty: "beauty.html",
+      cleaning: "cleaning.html",
+      repairs: "repairs.html",
+      carcare: "carcare.html",
+      appliance: "appliance.html",
+    };
+
+    const KEYWORDS = {
+      beauty: [
+        "beauty","wellness","hair","haircut","barber","salon","stylist","hairstyle",
+        "color","dye","makeup","lashes","facial","spa","massage","wax","waxing",
+        "nail","nails","manicure","pedicure","beard","groom"
+      ],
+      cleaning: [
+        "clean","cleaning","deepclean","deep","housekeeping","maid","sweep","mop",
+        "dust","vacuum","sofa clean","carpet clean","kitchen clean","bathroom clean",
+        "toilet","sink clean","stain","sanitize","disinfect","laundry"
+      ],
+      repairs: [
+        "repair","fix","broken","break","damage","install","mount",
+        "plumb","plumber","leak","water leak","pipe","drain","clog",
+        "tap","faucet","toilet leak","door","lock","hinge","window",
+        "furniture","bed","chair","table","shelf","painting","electrical","wiring",
+        "socket","switch","light","fan","ceiling","carpenter","handyman"
+      ],
+      carcare: [
+        "car","auto","vehicle","wash","detail","detailing","polish","tire","tyre",
+        "oil change","brake","engine","car repair","windshield","battery","jumpstart"
+      ],
+      appliance: [
+        "appliance","fridge","refrigerator","freezer","microwave","oven","stove",
+        "range","cooktop","dishwasher","washer","washing machine","dryer",
+        "hvac","ac","aircon","air conditioner","water heater","geyser"
+      ],
+    };
+
+    // phrases that strongly indicate a category (handles vague inputs)
+    const PHRASE_BOOSTS = [
+      { p: /water\s*leak|pipe\s*leak|toilet\s*leak|drain|clog/i, cat: "repairs", w: 5 },
+      { p: /bed|chair|table|sofa|furniture|hinge|door|window/i, cat: "repairs", w: 4 },
+      { p: /haircut|barber|spa|massage|facial|makeup|nail|wax/i, cat: "beauty", w: 5 },
+      { p: /deep\s*clean|kitchen\s*clean|bath(room)?\s*clean|sofa\s*clean|carpet\s*clean/i, cat: "cleaning", w: 5 },
+      { p: /car\s*(wash|detail|repair|battery|tire|oil)/i, cat: "carcare", w: 5 },
+      { p: /(fridge|refrigerator|washer|dryer|dishwasher|microwave|oven|stove|ac|air\s*conditioner|water\s*heater|geyser)/i, cat: "appliance", w: 5 },
+    ];
+
+    function norm(s) {
+      return (s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function ed(a, b) { // Levenshtein (small, fast enough for our keyword set)
+      const m = a.length, n = b.length;
+      const dp = Array.from({ length: m + 1 }, (_, i) => new Array(n + 1).fill(0));
+      for (let i = 0; i <= m; i++) dp[i][0] = i;
+      for (let j = 0; j <= n; j++) dp[0][j] = j;
+      for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          dp[i][j] = Math.min(
+            dp[i - 1][j] + 1,
+            dp[i][j - 1] + 1,
+            dp[i - 1][j - 1] + cost
+          );
+        }
+      }
+      return dp[m][n];
+    }
+
+    function tokenScore(tok, keyword) {
+      if (!tok || !keyword) return 0;
+      if (tok === keyword) return 1.0;
+      if (keyword.includes(tok) && tok.length >= 4) return 0.85;
+      if (tok.length >= 4 && tok.startsWith(keyword)) return 0.75;
+      const d = ed(tok, keyword);
+      if (d === 1) return 0.8;
+      if (d === 2) return 0.6;
+      return 0;
+    }
+
+    function scoreCategory(query, cat) {
+      const q = norm(query);
+      if (!q) return 0;
+      let score = 0;
+
+      // phrase boosts
+      for (const { p, cat: c, w } of PHRASE_BOOSTS) {
+        if (c === cat && p.test(query)) score += w;
+      }
+
+      // token similarity
+      const tokens = q.split(" ");
+      for (const t of tokens) {
+        let best = 0;
+        for (const kw of KEYWORDS[cat]) {
+          const kwn = norm(kw);
+          // multi-word keyword presence
+          if (kwn.includes(" ") && q.includes(kwn)) {
+            best = Math.max(best, 1.2); // strong hit for full phrase inside query
+            continue;
+          }
+          best = Math.max(best, tokenScore(t, kwn));
+        }
+        score += best;
+      }
+
+      // vague-intent helper words ("help", "need", etc.) shouldn't bias the choice
+      // so no extra weight added for them—just ignore by not adding keywords.
+
+      return score;
+    }
+
+    function classify(query) {
+      const cats = Object.keys(CATEGORY_PAGES);
+      const scores = cats.map(c => [c, scoreCategory(query, c)]);
+      // tie-breaker preference order if equal scores: repairs < cleaning < appliance < beauty < carcare (adjust as needed)
+      scores.sort((a, b) => b[1] - a[1] || ["repairs","cleaning","appliance","beauty","carcare"].indexOf(a[0]) - ["repairs","cleaning","appliance","beauty","carcare"].indexOf(b[0]));
+      const [bestCat, bestScore] = scores[0];
+      // minimal threshold: if everything is 0, fall back to cleaning (safest broad service)
+      return bestScore > 0 ? bestCat : "cleaning";
+    }
+
+    function goToCategory(cat) {
+      const page = CATEGORY_PAGES[cat] || CATEGORY_PAGES.cleaning;
+      window.location.href = page;
+    }
+
+    function classifyAndRoute(rawQuery) {
+      const query = norm(rawQuery);
+      if (!query) { 
+        // no text—stay graceful: show categories section instead of alerting
+        window.location.href = "#services";
+        return;
+      }
+      const cat = classify(query);
+      goToCategory(cat);
+    }
+
+    // --- WIRE BOTH SEARCH BOXES ---
+
+    // Middle (main) search form
+    document.getElementById("searchForm").addEventListener("submit", (e) => {
       e.preventDefault();
-      const q = encodeURIComponent(document.getElementById('searchQuery').value || '');
-      const loc = encodeURIComponent(document.getElementById('searchLocation').value || '');
-      // In a multi-page setup you'd navigate to services.html; for the demo just alert:
-      window.location.hash = 'services';
-      alert(`Searching for: "${decodeURIComponent(q)}" near "${decodeURIComponent(loc)}"`);
+      const q = document.getElementById("searchQuery").value || "";
+      classifyAndRoute(q);
     });
+
+    // Top bar search: press Enter to route
+    const navInput = document.getElementById("navServiceInput");
+    if (navInput) {
+      navInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          classifyAndRoute(navInput.value || "");
+        }
+      });
+    }
 
     // Major US cities (can expand later)
     const cities = [
@@ -713,6 +1019,186 @@
         navServiceDropdown.classList.add("hidden");
       }
     });
+
+    // --- AUTHENTICATION FUNCTIONALITY ---
+
+    // Check if user is logged in on page load
+    function checkAuthStatus() {
+      const customerId = localStorage.getItem("customerId");
+      const userName = localStorage.getItem("userName");
+      
+      if (customerId) {
+        showUserMenu(userName);
+      } else {
+        showAuthButtons();
+      }
+    }
+
+    // Show authentication buttons
+    function showAuthButtons() {
+      document.getElementById("authButtons").classList.remove("hidden");
+      document.getElementById("userMenu").classList.add("hidden");
+      document.getElementById("mobileAuthButtons").classList.remove("hidden");
+      document.getElementById("mobileUserMenu").classList.add("hidden");
+    }
+
+    // Show user menu
+    function showUserMenu(userName) {
+      document.getElementById("authButtons").classList.add("hidden");
+      document.getElementById("userMenu").classList.remove("hidden");
+      document.getElementById("mobileAuthButtons").classList.add("hidden");
+      document.getElementById("mobileUserMenu").classList.remove("hidden");
+      
+      if (userName) {
+        document.getElementById("userName").textContent = userName;
+        document.getElementById("mobileUserName").textContent = userName;
+      }
+    }
+
+    // Modal management
+    function showModal(modalId) {
+      document.getElementById(modalId).classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function hideModal(modalId) {
+      document.getElementById(modalId).classList.add("hidden");
+    }
+
+    // Event listeners for auth buttons
+    document.getElementById("loginBtn").addEventListener("click", () => showModal("loginModal"));
+    document.getElementById("registerBtn").addEventListener("click", () => showModal("registerModal"));
+    document.getElementById("mobileLoginBtn").addEventListener("click", () => showModal("loginModal"));
+    document.getElementById("mobileRegisterBtn").addEventListener("click", () => showModal("registerModal"));
+
+    // Close modal buttons
+    document.getElementById("closeLoginModal").addEventListener("click", () => hideModal("loginModal"));
+    document.getElementById("closeRegisterModal").addEventListener("click", () => hideModal("registerModal"));
+
+    // Switch between login and register modals
+    document.getElementById("switchToRegister").addEventListener("click", () => {
+      hideModal("loginModal");
+      showModal("registerModal");
+    });
+    document.getElementById("switchToLogin").addEventListener("click", () => {
+      hideModal("registerModal");
+      showModal("loginModal");
+    });
+
+    // Close modals when clicking outside
+    document.getElementById("loginModal").addEventListener("click", (e) => {
+      if (e.target.id === "loginModal") hideModal("loginModal");
+    });
+    document.getElementById("registerModal").addEventListener("click", (e) => {
+      if (e.target.id === "registerModal") hideModal("registerModal");
+    });
+
+    // User type selection for registration
+    let userType = "customer";
+    const customerBtn = document.getElementById("customerBtn");
+    const taskerBtn = document.getElementById("taskerBtn");
+    const taskerFields = document.getElementById("taskerFields");
+
+    customerBtn.addEventListener("click", () => {
+      userType = "customer";
+      customerBtn.classList.add("bg-teal-600", "text-white");
+      customerBtn.classList.remove("bg-gray-200", "text-gray-700");
+      taskerBtn.classList.add("bg-gray-200", "text-gray-700");
+      taskerBtn.classList.remove("bg-teal-600", "text-white");
+      taskerFields.classList.add("hidden");
+    });
+
+    taskerBtn.addEventListener("click", () => {
+      userType = "tasker";
+      taskerBtn.classList.add("bg-teal-600", "text-white");
+      taskerBtn.classList.remove("bg-gray-200", "text-gray-700");
+      customerBtn.classList.add("bg-gray-200", "text-gray-700");
+      customerBtn.classList.remove("bg-teal-600", "text-white");
+      taskerFields.classList.remove("hidden");
+    });
+
+    // Login form submission
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/login/customer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+          localStorage.setItem("customerId", data.user_id);
+          localStorage.setItem("userName", email.split("@")[0]); // Use email prefix as name
+          hideModal("loginModal");
+          showUserMenu(email.split("@")[0]);
+          alert("Login successful!");
+        } else {
+          alert(data.detail || "Login failed");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        alert("Login failed. Check console for details.");
+      }
+    });
+
+    // Registration form submission
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById("registerName").value,
+        email: document.getElementById("registerEmail").value,
+        password: document.getElementById("registerPassword").value,
+      };
+
+      if (userType === "tasker") {
+        data.skills = document.getElementById("registerSkills").value.split(",").map(s => s.trim());
+        data.hourly_rate = parseFloat(document.getElementById("registerHourlyRate").value);
+        data.bio = document.getElementById("registerBio").value;
+      }
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/register/${userType}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          const idKey = userType === "customer" ? "user_id" : "tasker_id";
+          localStorage.setItem("customerId", result[idKey]);
+          localStorage.setItem("userName", data.name);
+          hideModal("registerModal");
+          showUserMenu(data.name);
+          alert("Registration successful!");
+        } else {
+          alert(result.detail || "Registration failed");
+        }
+      } catch (err) {
+        console.error("Registration error:", err);
+        alert("Registration failed. Check console.");
+      }
+    });
+
+    // Logout functionality
+    function logout() {
+      localStorage.removeItem("customerId");
+      localStorage.removeItem("userName");
+      showAuthButtons();
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+    document.getElementById("mobileLogoutBtn").addEventListener("click", logout);
+
+    // Initialize auth status on page load
+    checkAuthStatus();
 
   </script>
 </body>

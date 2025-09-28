@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Provider Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="provider-dashboard.html" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-r from-teal-600 to-teal-700 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">W</span>
+                    </div>
+                    <span class="text-2xl font-extrabold text-gray-900">woke</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-2">
+                    <a href="provider-dashboard.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                        <i data-lucide="home" class="w-4 h-4"></i><span>Dashboard</span>
+                    </a>
+                    <a href="provider-bookings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                        <i data-lucide="calendar" class="w-4 h-4"></i><span>Bookings</span>
+                    </a>
+                    <a href="provider-profile.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-teal-600 bg-teal-50">
+                        <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
+                    </a>
+                    <a href="provider-earnings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                        <i data-lucide="dollar-sign" class="w-4 h-4"></i><span>Earnings</span>
+                    </a>
+                </nav>
+
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                            <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center">
+                                <span class="text-white font-semibold text-sm" id="userInitials">JD</span>
+                            </div>
+                            <span id="userName">John Doe</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="provider-profile.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
+                            <a href="provider-earnings.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Earnings</a>
+                            <hr class="my-1">
+                            <button onclick="logout()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden rounded-md p-2 hover:bg-gray-100">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Nav -->
+            <div id="mobileMenu" class="hidden md:hidden py-4 space-y-2 border-t">
+                <a href="provider-dashboard.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                    <i data-lucide="home" class="w-4 h-4"></i><span>Dashboard</span>
+                </a>
+                <a href="provider-bookings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                    <i data-lucide="calendar" class="w-4 h-4"></i><span>Bookings</span>
+                </a>
+                <a href="provider-profile.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-teal-600 bg-teal-50">
+                    <i data-lucide="user" class="w-4 h-4"></i><span>Profile</span>
+                </a>
+                <a href="provider-earnings.html" class="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-teal-600 hover:bg-gray-50">
+                    <i data-lucide="dollar-sign" class="w-4 h-4"></i><span>Earnings</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Profile Settings</h1>
+            <p class="text-gray-600 mt-2">Manage your provider profile and account settings</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Profile Overview -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="text-center">
+                        <div class="w-24 h-24 bg-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-white font-bold text-2xl" id="profileInitials">JD</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900" id="profileName">John Doe</h3>
+                        <p class="text-gray-500" id="profileEmail">john@example.com</p>
+                        <div class="mt-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800" id="profileStatus">
+                                Available
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Profile Information</h2>
+                    </div>
+                    <form id="profileForm" class="p-6 space-y-6">
+                        <!-- Basic Information -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <input type="text" id="name" name="name" required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" id="email" name="email" disabled
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                            <div>
+                                <label for="hourlyRate" class="block text-sm font-medium text-gray-700">Hourly Rate ($)</label>
+                                <input type="number" id="hourlyRate" name="hourlyRate" min="10" max="200" required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div>
+                            <label for="skills" class="block text-sm font-medium text-gray-700">Skills & Services</label>
+                            <textarea id="skills" name="skills" rows="3" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                placeholder="List your skills and services (e.g., Plumbing, Electrical, Cleaning, etc.)"></textarea>
+                        </div>
+
+                        <!-- Bio -->
+                        <div>
+                            <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+                            <textarea id="bio" name="bio" rows="4"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"
+                                placeholder="Tell customers about yourself and your experience"></textarea>
+                        </div>
+
+                        <!-- Availability -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Availability</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="radio" name="availability" value="available" class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">Available for new bookings</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="availability" value="busy" class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">Busy - not taking new bookings</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="availability" value="unavailable" class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300">
+                                    <span class="ml-2 text-sm text-gray-700">Unavailable</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="resetForm()" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                Reset
+                            </button>
+                            <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        let originalData = {};
+
+        // Check authentication
+        function checkAuth() {
+            const providerId = localStorage.getItem("providerId");
+            const providerName = localStorage.getItem("providerName");
+            
+            if (!providerId) {
+                window.location.href = "provider-login.html";
+                return;
+            }
+            
+            // Update UI with provider info
+            document.getElementById("userName").textContent = providerName || "Provider";
+            document.getElementById("userInitials").textContent = (providerName || "P").charAt(0).toUpperCase();
+        }
+
+        // Load profile data
+        async function loadProfile() {
+            const providerId = localStorage.getItem("providerId");
+            if (!providerId) return;
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/profiles/${providerId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    originalData = data;
+                    populateForm(data);
+                } else {
+                    console.error("Failed to load profile:", data);
+                }
+            } catch (error) {
+                console.error("Error loading profile:", error);
+            }
+        }
+
+        // Populate form with data
+        function populateForm(data) {
+            document.getElementById("name").value = data.name || "";
+            document.getElementById("email").value = data.email || "";
+            document.getElementById("phone").value = localStorage.getItem('providerPhone') || "";
+            document.getElementById("hourlyRate").value = data.hourly_rate || "";
+            document.getElementById("skills").value = Array.isArray(data.skills) ? data.skills.join(", ") : data.skills || "";
+            document.getElementById("bio").value = data.bio || "";
+            
+            // Set availability
+            const availability = data.availability || "available";
+            document.querySelector(`input[name="availability"][value="${availability}"]`).checked = true;
+            
+            // Update profile overview
+            document.getElementById("profileName").textContent = data.name || "Provider";
+            document.getElementById("profileEmail").textContent = data.email || "";
+            document.getElementById("profileInitials").textContent = (data.name || "P").charAt(0).toUpperCase();
+            document.getElementById("profileStatus").textContent = availability.charAt(0).toUpperCase() + availability.slice(1);
+        }
+
+        // Handle form submission
+        document.getElementById("profileForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const providerId = localStorage.getItem("providerId");
+            if (!providerId) return;
+            
+            const formData = {
+                name: document.getElementById("name").value,
+                hourly_rate: parseFloat(document.getElementById("hourlyRate").value),
+                skills: document.getElementById("skills").value.split(",").map(s => s.trim()),
+                bio: document.getElementById("bio").value,
+                availability: document.querySelector('input[name="availability"]:checked').value
+            };
+            
+            // Store phone in localStorage since it's not in the database
+            localStorage.setItem('providerPhone', document.getElementById("phone").value);
+            
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/profiles/${providerId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok) {
+                    alert("Profile updated successfully!");
+                    loadProfile(); // Reload to get updated data
+                } else {
+                    const error = await response.json();
+                    alert("Failed to update profile: " + error.detail);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to update profile. Please try again.");
+            }
+        });
+
+        // Reset form
+        function resetForm() {
+            populateForm(originalData);
+        }
+
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            
+            let formatted = '';
+            if (value.length === 0) {
+                formatted = '';
+            } else if (value.length <= 3) {
+                formatted = '(' + value;
+            } else if (value.length <= 6) {
+                formatted = '(' + value.substring(0, 3) + ') ' + value.substring(3);
+            } else {
+                formatted = '(' + value.substring(0, 3) + ') ' + value.substring(3, 6) + '-' + value.substring(6);
+            }
+            
+            this.value = formatted;
+        });
+
+        // User menu toggle
+        document.getElementById("userMenuBtn").addEventListener("click", function() {
+            const menu = document.getElementById("userMenu");
+            menu.classList.toggle("hidden");
+        });
+
+        // Close user menu when clicking outside
+        document.addEventListener("click", function(e) {
+            const menu = document.getElementById("userMenu");
+            const btn = document.getElementById("userMenuBtn");
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.add("hidden");
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById("mobileMenuBtn").addEventListener("click", function() {
+            const menu = document.getElementById("mobileMenu");
+            menu.classList.toggle("hidden");
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem("providerId");
+            localStorage.removeItem("providerName");
+            window.location.href = "provider-login.html";
+        }
+
+        // Initialize page
+        checkAuth();
+        loadProfile();
+    </script>
+</body>
+</html>

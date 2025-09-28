@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment — Woke</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="bg-gray-50">
+  <!-- HEADER -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+      <a href="index.html" class="flex items-center space-x-2">
+        <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
+        <span class="font-bold text-xl text-gray-900">woke</span>
+      </a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
+        </a>
+        <a href="bookings.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="calendar" class="w-4 h-4 mr-1"></i> My Bookings
+        </a>
+        <a href="profile.html" class="flex items-center text-gray-700 hover:text-teal-600">
+          <i data-lucide="user" class="w-4 h-4 mr-1"></i> Profile
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Progress Steps -->
+    <div class="mb-8">
+      <div class="flex items-center justify-center space-x-8">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+          <span class="ml-2 text-sm font-medium text-teal-600">Booking Details</span>
+        </div>
+        <div class="w-16 h-0.5 bg-teal-600"></div>
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+          <span class="ml-2 text-sm font-medium text-teal-600">Payment</span>
+        </div>
+        <div class="w-16 h-0.5 bg-gray-300"></div>
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-bold">3</div>
+          <span class="ml-2 text-sm font-medium text-gray-500">Confirmation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heading -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Complete Your Payment</h1>
+      <p class="text-lg text-gray-600">Secure payment processing for your service booking</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Booking Summary -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Booking Summary</h2>
+        
+        <div id="bookingSummary" class="space-y-4">
+          <!-- Booking details will be populated by JavaScript -->
+        </div>
+
+        <div class="border-t pt-4 mt-6">
+          <div class="flex justify-between items-center text-lg font-semibold">
+            <span>Total Amount</span>
+            <span id="totalAmount" class="text-teal-600">$0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Form -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">Payment Information</h2>
+        
+        <form id="paymentForm" class="space-y-4">
+          <!-- Card Number with Auto-formatting -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              maxlength="19" />
+            <div class="flex items-center mt-1">
+              <img src="https://img.icons8.com/color/24/000000/visa.png" alt="Visa" class="mr-2" />
+              <img src="https://img.icons8.com/color/24/000000/mastercard.png" alt="Mastercard" class="mr-2" />
+              <img src="https://img.icons8.com/color/24/000000/amex.png" alt="Amex" class="mr-2" />
+            </div>
+          </div>
+
+          <!-- Expiry and CVV with Auto-formatting -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+              <input type="text" id="expiryDate" placeholder="MM/YY"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                maxlength="5" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+              <input type="text" id="cvv" placeholder="123"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                maxlength="4" />
+            </div>
+          </div>
+
+          <!-- Cardholder Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Cardholder Name</label>
+            <input type="text" id="cardholderName" placeholder="John Doe"
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+
+          <!-- Billing Address with Autocomplete -->
+          <div class="relative">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Billing Address</label>
+            <input type="text" id="billingAddress" placeholder="Start typing your billing address..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              autocomplete="address-line1" />
+            <!-- Address suggestions dropdown -->
+            <div id="billingAddressSuggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden max-h-60 overflow-y-auto mt-1">
+            </div>
+          </div>
+
+          <!-- Payment Button -->
+          <button type="submit" id="payButton"
+            class="w-full bg-teal-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            <span id="payButtonText">Pay Now</span>
+            <div id="payButtonLoading" class="hidden">
+              <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Processing Payment...
+            </div>
+          </button>
+        </form>
+
+        <!-- Security Notice -->
+        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div class="flex items-center">
+            <i data-lucide="shield-check" class="w-5 h-5 text-blue-600 mr-2"></i>
+            <span class="text-sm text-blue-800">Your payment is secured with 256-bit SSL encryption</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Payment Success Modal -->
+  <div id="paymentSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md">
+      <div class="p-6 text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i data-lucide="check" class="w-8 h-8 text-green-600"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">Payment Successful!</h3>
+        <p class="text-gray-600 mb-6">Your booking has been confirmed and payment processed.</p>
+        <div class="flex space-x-3">
+          <button id="viewBookingsBtn" class="flex-1 bg-teal-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-teal-700">
+            View My Bookings
+          </button>
+          <button id="goHomeBtn" class="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200">
+            Go Home
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Global variables
+    let bookingData = null;
+    let paymentProcessed = false;
+
+    // Address autocomplete functionality for billing address
+    const billingAddressInput = document.getElementById('billingAddress');
+    const billingAddressSuggestions = document.getElementById('billingAddressSuggestions');
+    
+    // Comprehensive US address database (same as booking form)
+    const addressDatabase = [
+      // New York
+      "123 Broadway, New York, NY 10001",
+      "456 5th Avenue, New York, NY 10018",
+      "789 Park Avenue, New York, NY 10021",
+      "321 Madison Avenue, New York, NY 10017",
+      "654 Lexington Avenue, New York, NY 10022",
+      
+      // Los Angeles
+      "123 Sunset Boulevard, Los Angeles, CA 90028",
+      "456 Hollywood Boulevard, Los Angeles, CA 90028",
+      "789 Rodeo Drive, Beverly Hills, CA 90210",
+      "321 Wilshire Boulevard, Los Angeles, CA 90010",
+      "654 Santa Monica Boulevard, Santa Monica, CA 90401",
+      
+      // Chicago
+      "123 Michigan Avenue, Chicago, IL 60601",
+      "456 State Street, Chicago, IL 60605",
+      "789 Wacker Drive, Chicago, IL 60601",
+      "321 Lake Shore Drive, Chicago, IL 60611",
+      "654 North Avenue, Chicago, IL 60614",
+      
+      // Houston
+      "123 Main Street, Houston, TX 77002",
+      "456 Kirby Drive, Houston, TX 77019",
+      "789 Westheimer Road, Houston, TX 77006",
+      "321 Richmond Avenue, Houston, TX 77006",
+      "654 Montrose Boulevard, Houston, TX 77006",
+      
+      // Phoenix
+      "123 Central Avenue, Phoenix, AZ 85004",
+      "456 Camelback Road, Phoenix, AZ 85016",
+      "789 Scottsdale Road, Scottsdale, AZ 85251",
+      "321 Indian School Road, Phoenix, AZ 85013",
+      "654 Thomas Road, Phoenix, AZ 85013",
+      
+      // Philadelphia
+      "123 Market Street, Philadelphia, PA 19107",
+      "456 Chestnut Street, Philadelphia, PA 19106",
+      "789 Walnut Street, Philadelphia, PA 19107",
+      "321 Spruce Street, Philadelphia, PA 19106",
+      "654 Locust Street, Philadelphia, PA 19107",
+      
+      // San Antonio
+      "123 Alamo Plaza, San Antonio, TX 78205",
+      "456 Broadway Street, San Antonio, TX 78215",
+      "789 Houston Street, San Antonio, TX 78205",
+      "321 Navarro Street, San Antonio, TX 78205",
+      "654 Commerce Street, San Antonio, TX 78205",
+      
+      // San Diego
+      "123 Harbor Drive, San Diego, CA 92101",
+      "456 5th Avenue, San Diego, CA 92101",
+      "789 Broadway, San Diego, CA 92101",
+      "321 University Avenue, San Diego, CA 92103",
+      "654 El Cajon Boulevard, San Diego, CA 92115",
+      
+      // Dallas
+      "123 Main Street, Dallas, TX 75201",
+      "456 Elm Street, Dallas, TX 75201",
+      "789 Commerce Street, Dallas, TX 75201",
+      "321 Pearl Street, Dallas, TX 75201",
+      "654 Ross Avenue, Dallas, TX 75201",
+      
+      // San Jose
+      "123 Santa Clara Street, San Jose, CA 95113",
+      "456 First Street, San Jose, CA 95113",
+      "789 Market Street, San Jose, CA 95110",
+      "321 Almaden Boulevard, San Jose, CA 95110",
+      "654 Winchester Boulevard, San Jose, CA 95128",
+      
+      // Austin
+      "123 Congress Avenue, Austin, TX 78701",
+      "456 Guadalupe Street, Austin, TX 78701",
+      "789 Red River Street, Austin, TX 78701",
+      "321 Brazos Street, Austin, TX 78701",
+      "654 Lavaca Street, Austin, TX 78701",
+      
+      // Jacksonville
+      "123 Bay Street, Jacksonville, FL 32202",
+      "456 Forsyth Street, Jacksonville, FL 32202",
+      "789 Main Street, Jacksonville, FL 32202",
+      "321 Ocean Street, Jacksonville, FL 32202",
+      "654 Riverside Avenue, Jacksonville, FL 32202",
+      
+      // Fort Worth
+      "123 Main Street, Fort Worth, TX 76102",
+      "456 Houston Street, Fort Worth, TX 76102",
+      "789 Throckmorton Street, Fort Worth, TX 76102",
+      "321 Calhoun Street, Fort Worth, TX 76102",
+      "654 Weatherford Street, Fort Worth, TX 76102",
+      
+      // Columbus
+      "123 High Street, Columbus, OH 43215",
+      "456 Broad Street, Columbus, OH 43215",
+      "789 Main Street, Columbus, OH 43215",
+      "321 Gay Street, Columbus, OH 43215",
+      "654 State Street, Columbus, OH 43215",
+      
+      // Charlotte
+      "123 Trade Street, Charlotte, NC 28202",
+      "456 Tryon Street, Charlotte, NC 28202",
+      "789 College Street, Charlotte, NC 28202",
+      "321 Church Street, Charlotte, NC 28202",
+      "654 Graham Street, Charlotte, NC 28202",
+      
+      // Seattle
+      "123 Pike Street, Seattle, WA 98101",
+      "456 Pine Street, Seattle, WA 98101",
+      "789 University Street, Seattle, WA 98101",
+      "321 Seneca Street, Seattle, WA 98101",
+      "654 Spring Street, Seattle, WA 98104",
+      
+      // Denver
+      "123 16th Street, Denver, CO 80202",
+      "456 Larimer Street, Denver, CO 80202",
+      "789 Blake Street, Denver, CO 80202",
+      "321 Market Street, Denver, CO 80202",
+      "654 Arapahoe Street, Denver, CO 80202",
+      
+      // Washington DC
+      "123 Pennsylvania Avenue, Washington, DC 20004",
+      "456 Constitution Avenue, Washington, DC 20001",
+      "789 Independence Avenue, Washington, DC 20003",
+      "321 K Street, Washington, DC 20001",
+      "654 M Street, Washington, DC 20001",
+      
+      // Boston
+      "123 Boylston Street, Boston, MA 02116",
+      "456 Newbury Street, Boston, MA 02116",
+      "789 Commonwealth Avenue, Boston, MA 02215",
+      "321 Beacon Street, Boston, MA 02116",
+      "654 Tremont Street, Boston, MA 02116",
+      
+      // Miami
+      "123 Biscayne Boulevard, Miami, FL 33132",
+      "456 Flagler Street, Miami, FL 33132",
+      "789 Brickell Avenue, Miami, FL 33131",
+      "321 Collins Avenue, Miami Beach, FL 33139",
+      "654 Lincoln Road, Miami Beach, FL 33139"
+    ];
+
+    billingAddressInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      billingAddressSuggestions.innerHTML = '';
+      
+      if (query.length < 2) {
+        billingAddressSuggestions.classList.add('hidden');
+        return;
+      }
+      
+      const matches = addressDatabase.filter(addr => 
+        addr.toLowerCase().includes(query)
+      ).slice(0, 5);
+      
+      if (matches.length > 0) {
+        matches.forEach(addr => {
+          const div = document.createElement('div');
+          div.className = 'px-3 py-2 hover:bg-teal-100 cursor-pointer text-sm border-b border-gray-100';
+          div.textContent = addr;
+          div.addEventListener('click', function() {
+            billingAddressInput.value = addr;
+            billingAddressSuggestions.classList.add('hidden');
+          });
+          billingAddressSuggestions.appendChild(div);
+        });
+        billingAddressSuggestions.classList.remove('hidden');
+      } else {
+        billingAddressSuggestions.classList.add('hidden');
+      }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!billingAddressInput.contains(e.target) && !billingAddressSuggestions.contains(e.target)) {
+        billingAddressSuggestions.classList.add('hidden');
+      }
+    });
+
+    // Card number formatting
+    const cardNumberInput = document.getElementById('cardNumber');
+    cardNumberInput.addEventListener('input', function() {
+      let value = this.value.replace(/\D/g, ''); // Remove non-digits
+      
+      // Limit to 16 digits
+      if (value.length > 16) {
+        value = value.substring(0, 16);
+      }
+      
+      // Format as XXXX XXXX XXXX XXXX
+      if (value.length > 0) {
+        value = value.match(/.{1,4}/g).join(' ');
+      }
+      
+      this.value = value;
+    });
+
+    // Expiry date formatting
+    const expiryDateInput = document.getElementById('expiryDate');
+    expiryDateInput.addEventListener('input', function() {
+      let value = this.value.replace(/\D/g, ''); // Remove non-digits
+      
+      // Limit to 4 digits
+      if (value.length > 4) {
+        value = value.substring(0, 4);
+      }
+      
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      
+      this.value = value;
+    });
+
+    // CVV formatting (only numbers, max 4 digits)
+    const cvvInput = document.getElementById('cvv');
+    cvvInput.addEventListener('input', function() {
+      let value = this.value.replace(/\D/g, ''); // Remove non-digits
+      
+      // Limit to 4 digits
+      if (value.length > 4) {
+        value = value.substring(0, 4);
+      }
+      
+      this.value = value;
+    });
+
+    // Load booking data from URL parameters or localStorage
+    function loadBookingData() {
+      const params = new URLSearchParams(window.location.search);
+      const bookingId = params.get('booking_id');
+      
+      // Try to get from localStorage first
+      const storedBooking = localStorage.getItem('lastBooking');
+      if (storedBooking) {
+        bookingData = JSON.parse(storedBooking);
+        displayBookingSummary();
+        return;
+      }
+
+      // If no stored booking, try to fetch from API
+      if (bookingId) {
+        fetchBookingFromAPI(bookingId);
+      } else {
+        // Fallback: create a mock booking
+        createMockBooking();
+      }
+    }
+
+    function createMockBooking() {
+      const params = new URLSearchParams(window.location.search);
+      bookingData = {
+        id: Date.now(),
+        service_name: params.get('service') || 'Service',
+        provider_name: params.get('provider') || 'Service Provider',
+        customer_name: 'Customer',
+        customer_email: 'customer@example.com',
+        customer_address: 'Service Address',
+        price: 75.00
+      };
+      displayBookingSummary();
+    }
+
+    async function fetchBookingFromAPI(bookingId) {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/bookings/${bookingId}`);
+        if (response.ok) {
+          const data = await response.json();
+          bookingData = data.booking;
+          displayBookingSummary();
+        } else {
+          createMockBooking();
+        }
+      } catch (error) {
+        console.error('Error fetching booking:', error);
+        createMockBooking();
+      }
+    }
+
+    function displayBookingSummary() {
+      if (!bookingData) return;
+
+      const summaryContainer = document.getElementById('bookingSummary');
+      const totalAmount = document.getElementById('totalAmount');
+
+      // Calculate price based on service type
+      let price = 75.00; // Default price
+      if (bookingData.service_name) {
+        if (bookingData.service_name.toLowerCase().includes('cleaning')) price = 45.00;
+        else if (bookingData.service_name.toLowerCase().includes('repair')) price = 80.00;
+        else if (bookingData.service_name.toLowerCase().includes('car')) price = 50.00;
+        else if (bookingData.service_name.toLowerCase().includes('beauty')) price = 75.00;
+      }
+
+      summaryContainer.innerHTML = `
+        <div class="flex justify-between">
+          <span class="text-gray-600">Service</span>
+          <span class="font-medium">${bookingData.service_name || 'Service'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Provider</span>
+          <span class="font-medium">${bookingData.provider_name || 'Service Provider'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Customer</span>
+          <span class="font-medium">${bookingData.customer_name || 'Customer'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Service Fee</span>
+          <span class="font-medium">$${price.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Processing Fee</span>
+          <span class="font-medium">$2.50</span>
+        </div>
+      `;
+
+      totalAmount.textContent = `$${(price + 2.50).toFixed(2)}`;
+    }
+
+    // Payment form submission
+    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (paymentProcessed) return;
+
+      const payButton = document.getElementById('payButton');
+      const payButtonText = document.getElementById('payButtonText');
+      const payButtonLoading = document.getElementById('payButtonLoading');
+
+      // Show loading state
+      payButton.disabled = true;
+      payButtonText.classList.add('hidden');
+      payButtonLoading.classList.remove('hidden');
+
+      try {
+        // Simulate payment processing
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Create booking in database if not already created
+        if (bookingData && !bookingData.id) {
+          await createBookingInDatabase();
+        }
+
+        // Mark payment as processed
+        paymentProcessed = true;
+
+        // Show success modal
+        document.getElementById('paymentSuccessModal').classList.remove('hidden');
+
+      } catch (error) {
+        console.error('Payment error:', error);
+        alert('Payment failed. Please try again.');
+        
+        // Reset button
+        payButton.disabled = false;
+        payButtonText.classList.remove('hidden');
+        payButtonLoading.classList.add('hidden');
+      }
+    });
+
+    async function createBookingInDatabase() {
+      try {
+        const customerId = localStorage.getItem("customerId");
+        if (!customerId) {
+          throw new Error("Customer not logged in");
+        }
+
+        // Get available taskers
+        const taskersResponse = await fetch("http://127.0.0.1:8000/taskers");
+        const taskersData = await taskersResponse.json();
+
+        // Find matching tasker
+        let selectedTasker = null;
+        if (bookingData.provider_name && taskersData.taskers) {
+          selectedTasker = taskersData.taskers.find(t => 
+            t.name.toLowerCase().includes(bookingData.provider_name.toLowerCase()) || 
+            bookingData.provider_name.toLowerCase().includes(t.name.toLowerCase())
+          );
+        }
+        
+        if (!selectedTasker && taskersData.taskers && taskersData.taskers.length > 0) {
+          selectedTasker = taskersData.taskers[0];
+        }
+
+        if (!selectedTasker) {
+          throw new Error("No taskers available");
+        }
+
+        // Get available tasks
+        // Get task ID from URL or create a new task for the service
+        let taskId = params.get('task_id');
+        if (!taskId) {
+          // Create a new task for the service
+          const serviceName = params.get('service') || 'Service';
+          const taskResponse = await fetch("http://127.0.0.1:8000/tasks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              customer_id: customerId,
+              title: serviceName,
+              description: `Professional ${serviceName} service`,
+              status: "open"
+            })
+          });
+          
+          if (taskResponse.ok) {
+            const taskData = await taskResponse.json();
+            taskId = taskData.task.id;
+          } else {
+            // Fallback to first available task
+            const tasksResponse = await fetch(`http://127.0.0.1:8000/tasks?customer_id=${customerId}`);
+            const tasksData = await tasksResponse.json();
+            if (tasksData.tasks && tasksData.tasks.length > 0) {
+              taskId = tasksData.tasks[0].id;
+            } else {
+              taskId = 6; // Last resort default
+            }
+          }
+        }
+
+        // Create booking
+        const response = await fetch("http://127.0.0.1:8000/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            task_id: parseInt(taskId),
+            tasker_id: selectedTasker.id,
+            customer_id: customerId
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          bookingData.id = result.booking[0].id;
+          bookingData.status = 'pending';
+          
+          // Save booking to localStorage for this customer
+          const existingBookings = JSON.parse(localStorage.getItem(`bookings_${customerId}`) || '[]');
+          
+          // Add the new booking
+          const newBooking = {
+            id: bookingData.id,
+            task_id: parseInt(taskId),
+            customer_id: customerId,
+            status: 'pending',
+            created_at: new Date().toISOString(),
+            task: { title: bookingData.service_name },
+            tasker: { name: bookingData.provider_name }
+          };
+          
+          existingBookings.push(newBooking);
+          localStorage.setItem(`bookings_${customerId}`, JSON.stringify(existingBookings));
+          localStorage.setItem('lastBooking', JSON.stringify(bookingData));
+        }
+
+      } catch (error) {
+        console.error('Error creating booking:', error);
+        // Don't throw error - just log it, payment can still succeed
+      }
+    }
+
+    // Modal button handlers
+    document.getElementById('viewBookingsBtn').addEventListener('click', () => {
+      window.location.href = 'bookings.html';
+    });
+
+    document.getElementById('goHomeBtn').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    // Load booking data on page load
+    loadBookingData();
+  </script>
+</body>
+
+</html>

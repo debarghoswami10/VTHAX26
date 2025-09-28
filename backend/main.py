@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 import os
 from ai_integration import classify_service_request, get_service_followups, match_providers
+# from uber_like_booking_system import UberLikeBookingSystem
 
 load_dotenv()
 app = FastAPI(
@@ -32,6 +33,9 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Initialize Uber-like booking system (temporarily disabled)
+# booking_system = UberLikeBookingSystem()
+
 # --------------------------
 # Schemas
 # --------------------------
@@ -44,6 +48,15 @@ class TaskerRegister(BaseModel):
     email: str
     password: str
     name: str
+    skills: list[str]
+    hourly_rate: float
+    bio: str
+
+class ProviderRegister(BaseModel):
+    email: str
+    password: str
+    name: str
+    phone: str
     skills: list[str]
     hourly_rate: float
     bio: str
@@ -97,7 +110,15 @@ def login_customer(email: str = Body(...), password: str = Body(...)):
     user = supabase.auth.sign_in_with_password({"email": email, "password": password})
     if not user.user:
         raise HTTPException(status_code=400, detail="Login failed")
-    return {"message": "Login successful", "user_id": user.user.id}
+    
+    # Get user profile to return name
+    try:
+        profile_response = supabase.table("profiles").select("name").eq("id", user.user.id).execute()
+        user_name = profile_response.data[0]["name"] if profile_response.data else "User"
+    except:
+        user_name = "User"
+    
+    return {"message": "Login successful", "user_id": user.user.id, "user_name": user_name}
 
 # --------------------------
 # Step 2: Providers Endpoint
@@ -194,23 +215,64 @@ def create_booking(data: BookingCreate):
         raise HTTPException(status_code=400, detail="Failed to create booking")
     return {"message": "Booking created", "booking": response.data}
 
-@app.get("/bookings")
-def get_bookings(customer_id: str):
-    response = supabase.table("bookings") \
-        .select("id, task_id, status, created_at, task:tasks(title), tasker:profiles(name)") \
-        .eq("customer_id", customer_id) \
-        .execute()
-    return response.data
-
-@app.get("/bookings")
-def list_bookings(customer_id: str):
-    response = supabase.table("bookings").select("*").eq("customer_id", customer_id).execute()
-    return {"bookings": response.data}
 
 @app.get("/bookings/tasker")
 def list_tasker_bookings(tasker_id: str):
     response = supabase.table("bookings").select("*").eq("tasker_id", tasker_id).execute()
     return {"bookings": response.data}
+
+@app.get("/taskers")
+def get_taskers():
+    """Get all available taskers"""
+    try:
+        response = supabase.table("profiles").select("id, name, skills, hourly_rate, bio").eq("role", "tasker").execute()
+        return {"taskers": response.data or []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch taskers: {str(e)}")
+
+@app.get("/profiles/{profile_id}")
+def get_profile(profile_id: str):
+    """Get user profile by ID"""
+    try:
+        response = supabase.table("profiles").select("*").eq("id", profile_id).execute()
+        if not response.data:
+            raise HTTPException(status_code=404, detail="Profile not found")
+        return response.data[0]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch profile: {str(e)}")
+
+class ProfileUpdate(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    hourly_rate: Optional[float] = None
+    skills: Optional[list[str]] = None
+    bio: Optional[str] = None
+    availability: Optional[str] = None
+
+@app.patch("/profiles/{profile_id}")
+def update_profile(profile_id: str, data: ProfileUpdate):
+    """Update user profile"""
+    try:
+        update_data = {}
+        if data.name is not None:
+            update_data["name"] = data.name
+        if data.hourly_rate is not None:
+            update_data["hourly_rate"] = data.hourly_rate
+        if data.skills is not None:
+            update_data["skills"] = data.skills
+        if data.bio is not None:
+            update_data["bio"] = data.bio
+        if data.availability is not None:
+            update_data["availability"] = data.availability
+        # Note: phone and address are stored in localStorage on frontend
+            
+        response = supabase.table("profiles").update(update_data).eq("id", profile_id).execute()
+        if not response.data:
+            raise HTTPException(status_code=404, detail="Profile not found")
+        return {"message": "Profile updated successfully", "profile": response.data[0]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update profile: {str(e)}")
 
 @app.patch("/bookings/{booking_id}")
 def update_booking(booking_id: int, data: BookingUpdate):
@@ -218,6 +280,14 @@ def update_booking(booking_id: int, data: BookingUpdate):
     if not response.data:
         raise HTTPException(status_code=404, detail="Booking not found or update failed")
     return {"message": f"Booking updated to {data.status}", "booking": response.data}
+
+@app.patch("/bookings/{booking_id}/customer")
+def update_booking_customer(booking_id: int, customer_id: str):
+    """Update customer_id for a booking (for fixing data issues)"""
+    response = supabase.table("bookings").update({"customer_id": customer_id}).eq("id", booking_id).execute()
+    if not response.data:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    return {"message": "Booking customer updated", "booking": response.data[0]}
 
 # --------------------------
 # Reviews Endpoints
@@ -266,9 +336,9 @@ class MatchRequest(BaseModel):
     location: Optional[Dict[str, float]] = None
 
 @app.post("/api/ai/classify")
-async def classify_service(data: ClassifyRequest):
+def classify_service(data: ClassifyRequest):
     try:
-        result = await classify_service_request(data.text)
+        result = classify_service_request(data.text)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Classification failed: {str(e)}")
@@ -339,3 +409,103 @@ async def pay_success(booking_id: str):
       </body>
     </html>
     """
+
+# --------------------------
+# Provider Authentication
+# --------------------------
+
+@app.post("/register/provider")
+def register_provider(provider: ProviderRegister):
+    try:
+        # Create auth user
+        user = supabase.auth.sign_up({
+            "email": provider.email,
+            "password": provider.password
+        })
+        
+        if not user.user:
+            raise HTTPException(status_code=400, detail="Registration failed")
+        
+        # Create provider profile
+        profile_data = {
+            "id": user.user.id,
+            "name": provider.name,
+            "role": "tasker",
+            "skills": provider.skills,
+            "hourly_rate": provider.hourly_rate,
+            "bio": provider.bio
+        }
+        
+        result = supabase.table("profiles").insert(profile_data).execute()
+        
+        return {"message": "Provider registered successfully", "provider_id": user.user.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
+
+@app.post("/login/provider")
+def login_provider(email: str = Body(...), password: str = Body(...)):
+    try:
+        user = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        if not user.user:
+            raise HTTPException(status_code=400, detail="Login failed")
+        
+        # Get provider profile
+        profile_response = supabase.table("profiles").select("name").eq("id", user.user.id).execute()
+        provider_name = profile_response.data[0]["name"] if profile_response.data else "Provider"
+        
+        return {"message": "Login successful", "provider_id": user.user.id, "provider_name": provider_name}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Login failed: {str(e)}")
+
+@app.get("/bookings")
+def get_bookings(customer_id: str = Query(None), provider_id: str = Query(None)):
+    """Get bookings - simplified for performance"""
+    try:
+        if customer_id:
+            # Get bookings for a specific customer
+            response = supabase.table("bookings") \
+                .select("id, task_id, customer_id, status, created_at, task:tasks(title), tasker:profiles!bookings_tasker_id_fkey(name)") \
+                .execute()
+            
+            all_bookings = response.data or []
+            customer_bookings = [booking for booking in all_bookings if booking.get("customer_id") == customer_id]
+            
+            return {"bookings": customer_bookings}
+        elif provider_id:
+            # Get bookings for a specific provider
+            response = supabase.table("bookings") \
+                .select("id, task_id, customer_id, status, created_at, task:tasks(title)") \
+                .eq("tasker_id", provider_id) \
+                .execute()
+            
+            return {"bookings": response.data or []}
+        else:
+            raise HTTPException(status_code=400, detail="Either customer_id or provider_id must be provided")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch bookings: {str(e)}")
+
+@app.patch("/bookings/{booking_id}")
+def update_booking(booking_id: str, status: str = Body(...)):
+    """Update booking status - simplified for performance with Uber-like support"""
+    try:
+        # Handle 'cancelled' status by mapping to 'completed' in database
+        # but track the real status in a separate field or localStorage
+        db_status = status
+        if status == "cancelled":
+            db_status = "completed"  # Map cancelled to completed for database constraint
+        
+        response = supabase.table("bookings") \
+            .update({"status": db_status}) \
+            .eq("id", booking_id) \
+            .execute()
+        
+        if not response.data:
+            raise HTTPException(status_code=404, detail="Booking not found")
+        
+        # Return the original status for frontend
+        booking = response.data[0]
+        booking["status"] = status  # Return original status
+        
+        return {"message": "Booking updated successfully", "booking": booking}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update booking: {str(e)}")

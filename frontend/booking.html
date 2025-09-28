@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Bookings — Woke</title>
+  <title>Booking — Woke</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -19,7 +19,7 @@
         <a href="index.html" class="flex items-center text-gray-700 hover:text-teal-600">
           <i data-lucide="home" class="w-4 h-4 mr-1"></i> Home
         </a>
-        <a href="bookings.html" class="flex items-center text-teal-600">
+        <a href="#" class="flex items-center text-gray-700 hover:text-teal-600">
           <i data-lucide="calendar" class="w-4 h-4 mr-1"></i> My Bookings
         </a>
         <a href="profile.html" class="flex items-center text-gray-700 hover:text-teal-600">
@@ -29,69 +29,417 @@
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold mb-8 text-gray-900">My Bookings</h2>
-    <div id="bookingList" class="space-y-4"></div>
+  <!-- MAIN CONTENT -->
+  <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Heading -->
+    <h2 class="text-3xl font-bold mb-8 text-gray-900">Booking Details</h2>
+
+    <!-- FORM -->
+    <form class="bg-white shadow-md rounded-2xl p-8 space-y-6">
+      <!-- Provider Name -->
+      <div>
+        <label for="provider" class="block text-lg font-medium text-gray-800 mb-2">Service Provider</label>
+        <input type="text" id="provider" name="provider"
+          class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base px-4 py-3"
+          readonly>
+      </div>
+
+      <!-- User Name -->
+      <div>
+        <label for="name" class="block text-lg font-medium text-gray-800 mb-2">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name"
+          class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base px-4 py-3">
+      </div>
+
+      <!-- Address with Autocomplete -->
+      <div class="relative">
+        <label for="address" class="block text-lg font-medium text-gray-800 mb-2">Address</label>
+        <input type="text" id="address" name="address" placeholder="Start typing your address..."
+          class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base px-4 py-3"
+          autocomplete="address-line1">
+        <!-- Address suggestions dropdown -->
+        <div id="addressSuggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto mt-1">
+        </div>
+      </div>
+
+      <!-- Phone with Auto-formatting -->
+      <div>
+        <label for="phone" class="block text-lg font-medium text-gray-800 mb-2">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890"
+          class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-base px-4 py-3"
+          maxlength="14">
+      </div>
+
+      <!-- Submit -->
+      <div>
+        <button type="submit"
+          class="w-full bg-teal-600 text-white text-lg font-medium py-3 px-4 rounded-lg shadow hover:bg-teal-700 transition">
+          Confirm Booking
+        </button>
+      </div>
+    </form>
   </main>
 
   <script>
     lucide.createIcons();
 
-    async function fetchBookings() {
+    // Get booking details from URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const provider = params.get("provider");
+    const service = params.get("service");
+    const taskerId = params.get("tasker_id");
+    const taskId = params.get("task_id");
+
+    // Pre-fill form with URL parameters
+    if (provider) {
+      document.getElementById("provider").value = provider;
+    }
+
+    // Address autocomplete functionality
+    const addressInput = document.getElementById('address');
+    const addressSuggestions = document.getElementById('addressSuggestions');
+    
+    // Comprehensive US address database
+    const addressDatabase = [
+      // New York
+      "123 Broadway, New York, NY 10001",
+      "456 5th Avenue, New York, NY 10018",
+      "789 Park Avenue, New York, NY 10021",
+      "321 Madison Avenue, New York, NY 10017",
+      "654 Lexington Avenue, New York, NY 10022",
+      
+      // Los Angeles
+      "123 Sunset Boulevard, Los Angeles, CA 90028",
+      "456 Hollywood Boulevard, Los Angeles, CA 90028",
+      "789 Rodeo Drive, Beverly Hills, CA 90210",
+      "321 Wilshire Boulevard, Los Angeles, CA 90010",
+      "654 Santa Monica Boulevard, Santa Monica, CA 90401",
+      
+      // Chicago
+      "123 Michigan Avenue, Chicago, IL 60601",
+      "456 State Street, Chicago, IL 60605",
+      "789 Wacker Drive, Chicago, IL 60601",
+      "321 Lake Shore Drive, Chicago, IL 60611",
+      "654 North Avenue, Chicago, IL 60614",
+      
+      // Houston
+      "123 Main Street, Houston, TX 77002",
+      "456 Kirby Drive, Houston, TX 77019",
+      "789 Westheimer Road, Houston, TX 77006",
+      "321 Richmond Avenue, Houston, TX 77006",
+      "654 Montrose Boulevard, Houston, TX 77006",
+      
+      // Phoenix
+      "123 Central Avenue, Phoenix, AZ 85004",
+      "456 Camelback Road, Phoenix, AZ 85016",
+      "789 Scottsdale Road, Scottsdale, AZ 85251",
+      "321 Indian School Road, Phoenix, AZ 85013",
+      "654 Thomas Road, Phoenix, AZ 85013",
+      
+      // Philadelphia
+      "123 Market Street, Philadelphia, PA 19107",
+      "456 Chestnut Street, Philadelphia, PA 19106",
+      "789 Walnut Street, Philadelphia, PA 19107",
+      "321 Spruce Street, Philadelphia, PA 19106",
+      "654 Locust Street, Philadelphia, PA 19107",
+      
+      // San Antonio
+      "123 Alamo Plaza, San Antonio, TX 78205",
+      "456 Broadway Street, San Antonio, TX 78215",
+      "789 Houston Street, San Antonio, TX 78205",
+      "321 Navarro Street, San Antonio, TX 78205",
+      "654 Commerce Street, San Antonio, TX 78205",
+      
+      // San Diego
+      "123 Harbor Drive, San Diego, CA 92101",
+      "456 5th Avenue, San Diego, CA 92101",
+      "789 Broadway, San Diego, CA 92101",
+      "321 University Avenue, San Diego, CA 92103",
+      "654 El Cajon Boulevard, San Diego, CA 92115",
+      
+      // Dallas
+      "123 Main Street, Dallas, TX 75201",
+      "456 Elm Street, Dallas, TX 75201",
+      "789 Commerce Street, Dallas, TX 75201",
+      "321 Pearl Street, Dallas, TX 75201",
+      "654 Ross Avenue, Dallas, TX 75201",
+      
+      // San Jose
+      "123 Santa Clara Street, San Jose, CA 95113",
+      "456 First Street, San Jose, CA 95113",
+      "789 Market Street, San Jose, CA 95110",
+      "321 Almaden Boulevard, San Jose, CA 95110",
+      "654 Winchester Boulevard, San Jose, CA 95128",
+      
+      // Austin
+      "123 Congress Avenue, Austin, TX 78701",
+      "456 Guadalupe Street, Austin, TX 78701",
+      "789 Red River Street, Austin, TX 78701",
+      "321 Brazos Street, Austin, TX 78701",
+      "654 Lavaca Street, Austin, TX 78701",
+      
+      // Jacksonville
+      "123 Bay Street, Jacksonville, FL 32202",
+      "456 Forsyth Street, Jacksonville, FL 32202",
+      "789 Main Street, Jacksonville, FL 32202",
+      "321 Ocean Street, Jacksonville, FL 32202",
+      "654 Riverside Avenue, Jacksonville, FL 32202",
+      
+      // Fort Worth
+      "123 Main Street, Fort Worth, TX 76102",
+      "456 Houston Street, Fort Worth, TX 76102",
+      "789 Throckmorton Street, Fort Worth, TX 76102",
+      "321 Calhoun Street, Fort Worth, TX 76102",
+      "654 Weatherford Street, Fort Worth, TX 76102",
+      
+      // Columbus
+      "123 High Street, Columbus, OH 43215",
+      "456 Broad Street, Columbus, OH 43215",
+      "789 Main Street, Columbus, OH 43215",
+      "321 Gay Street, Columbus, OH 43215",
+      "654 State Street, Columbus, OH 43215",
+      
+      // Charlotte
+      "123 Trade Street, Charlotte, NC 28202",
+      "456 Tryon Street, Charlotte, NC 28202",
+      "789 College Street, Charlotte, NC 28202",
+      "321 Church Street, Charlotte, NC 28202",
+      "654 Graham Street, Charlotte, NC 28202",
+      
+      // Seattle
+      "123 Pike Street, Seattle, WA 98101",
+      "456 Pine Street, Seattle, WA 98101",
+      "789 University Street, Seattle, WA 98101",
+      "321 Seneca Street, Seattle, WA 98101",
+      "654 Spring Street, Seattle, WA 98104",
+      
+      // Denver
+      "123 16th Street, Denver, CO 80202",
+      "456 Larimer Street, Denver, CO 80202",
+      "789 Blake Street, Denver, CO 80202",
+      "321 Market Street, Denver, CO 80202",
+      "654 Arapahoe Street, Denver, CO 80202",
+      
+      // Washington DC
+      "123 Pennsylvania Avenue, Washington, DC 20004",
+      "456 Constitution Avenue, Washington, DC 20001",
+      "789 Independence Avenue, Washington, DC 20003",
+      "321 K Street, Washington, DC 20001",
+      "654 M Street, Washington, DC 20001",
+      
+      // Boston
+      "123 Boylston Street, Boston, MA 02116",
+      "456 Newbury Street, Boston, MA 02116",
+      "789 Commonwealth Avenue, Boston, MA 02215",
+      "321 Beacon Street, Boston, MA 02116",
+      "654 Tremont Street, Boston, MA 02116",
+      
+      // Miami
+      "123 Biscayne Boulevard, Miami, FL 33132",
+      "456 Flagler Street, Miami, FL 33132",
+      "789 Brickell Avenue, Miami, FL 33131",
+      "321 Collins Avenue, Miami Beach, FL 33139",
+      "654 Lincoln Road, Miami Beach, FL 33139"
+    ];
+
+    addressInput.addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      addressSuggestions.innerHTML = '';
+      
+      if (query.length < 2) {
+        addressSuggestions.classList.add('hidden');
+        return;
+      }
+      
+      const matches = addressDatabase.filter(addr => 
+        addr.toLowerCase().includes(query)
+      ).slice(0, 5);
+      
+      if (matches.length > 0) {
+        matches.forEach(addr => {
+          const div = document.createElement('div');
+          div.className = 'px-4 py-2 hover:bg-teal-100 cursor-pointer text-sm border-b border-gray-100';
+          div.textContent = addr;
+          div.addEventListener('click', function() {
+            addressInput.value = addr;
+            addressSuggestions.classList.add('hidden');
+          });
+          addressSuggestions.appendChild(div);
+        });
+        addressSuggestions.classList.remove('hidden');
+      } else {
+        addressSuggestions.classList.add('hidden');
+      }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!addressInput.contains(e.target) && !addressSuggestions.contains(e.target)) {
+        addressSuggestions.classList.add('hidden');
+      }
+    });
+
+    // Phone number formatting
+    const phoneInput = document.getElementById('phone');
+    
+    phoneInput.addEventListener('input', function(e) {
+      // Get the current value and cursor position
+      const cursorPos = this.selectionStart;
+      const oldValue = this.value;
+      
+      // Extract only digits
+      let digits = this.value.replace(/\D/g, '');
+      
+      // Limit to 10 digits
+      if (digits.length > 10) {
+        digits = digits.substring(0, 10);
+      }
+      
+      // Format the number only when we have digits
+      let formatted = '';
+      if (digits.length === 0) {
+        formatted = '';
+      } else if (digits.length <= 3) {
+        formatted = '(' + digits;
+      } else if (digits.length <= 6) {
+        formatted = '(' + digits.substring(0, 3) + ') ' + digits.substring(3);
+      } else {
+        formatted = '(' + digits.substring(0, 3) + ') ' + digits.substring(3, 6) + '-' + digits.substring(6);
+      }
+      
+      // Only update if the formatted value is different
+      if (formatted !== oldValue) {
+        this.value = formatted;
+        
+        // Adjust cursor position to stay in the right place
+        let newCursorPos = cursorPos;
+        if (formatted.length > oldValue.length) {
+          newCursorPos = cursorPos + (formatted.length - oldValue.length);
+        } else if (formatted.length < oldValue.length) {
+          newCursorPos = Math.max(0, cursorPos - (oldValue.length - formatted.length));
+        }
+        
+        // Set cursor position
+        this.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    });
+
+    // Handle keydown to allow normal editing
+    phoneInput.addEventListener('keydown', function(e) {
+      // Allow all navigation and editing keys
+      if ([8, 9, 27, 13, 46, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
+          // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+          (e.ctrlKey && [65, 67, 86, 88, 90].indexOf(e.keyCode) !== -1)) {
+        return;
+      }
+      
+      // Allow digits (0-9) from both number pad and main keyboard
+      if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) {
+        return;
+      }
+      
+      // Block everything else
+      e.preventDefault();
+    });
+
+    // Check if user is logged in
+    function checkAuth() {
+      const customerId = localStorage.getItem("customerId");
+      if (!customerId) {
+        alert("Please login to make a booking");
+        window.location.href = "index.html";
+        return false;
+      }
+      return true;
+    }
+
+    // Form submission
+    document.querySelector("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      if (!checkAuth()) return;
+
+      const customerId = localStorage.getItem("customerId");
+      const formData = {
+        name: document.getElementById("name").value,
+        address: document.getElementById("address").value,
+        phone: document.getElementById("phone").value
+      };
+
+      // Validate required fields
+      if (!formData.name || !formData.address || !formData.phone) {
+        alert("Please fill in all required fields");
+        return;
+      }
+
       try {
-        // TODO: Replace with actual logged-in customer_id
-        const customerId = "REPLACE_WITH_CUSTOMER_UUID";
+        // Show loading state
+        const submitBtn = document.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = "Creating Booking...";
+        submitBtn.disabled = true;
 
-        const res = await fetch(`http://127.0.0.1:8000/bookings?customer_id=${customerId}`);
-        const data = await res.json();
+        // Get available tasks and taskers
+        const [tasksResponse, taskersResponse] = await Promise.all([
+          fetch(`http://127.0.0.1:8000/tasks?customer_id=${customerId}`),
+          fetch(`http://127.0.0.1:8000/taskers`)
+        ]);
 
-        const container = document.getElementById("bookingList");
-        container.innerHTML = "";
+        const tasksData = await tasksResponse.json();
+        const taskersData = await taskersResponse.json();
 
-        if (data.length === 0) {
-          container.innerHTML = `<p class="text-gray-500">No bookings found.</p>`;
-          return;
+        // Use the first available task, or create a simple one
+        let taskIdToUse = taskId || (tasksData.tasks && tasksData.tasks[0] ? tasksData.tasks[0].id : 6);
+        
+        // Find a matching tasker based on the provider name
+        let selectedTasker = null;
+        if (provider && taskersData.taskers) {
+          selectedTasker = taskersData.taskers.find(t => 
+            t.name.toLowerCase().includes(provider.toLowerCase()) || 
+            provider.toLowerCase().includes(t.name.toLowerCase())
+          );
+        }
+        
+        // If no match found, use the first available tasker
+        if (!selectedTasker && taskersData.taskers && taskersData.taskers.length > 0) {
+          selectedTasker = taskersData.taskers[0];
         }
 
-        data.forEach(b => {
-          const card = document.createElement("div");
-          card.className = "bg-white rounded-xl shadow p-6";
-          card.innerHTML = `
-            <h3 class="text-lg font-semibold text-gray-900">${b.task.title}</h3>
-            <p class="text-sm text-gray-600">Provider: ${b.tasker.name}</p>
-            <p class="text-sm text-gray-500">Status: <span class="font-medium">${b.status}</span></p>
-            <p class="text-xs text-gray-400">Created: ${new Date(b.created_at).toLocaleString()}</p>
-            <div class="mt-4 flex gap-2">
-              <button onclick="updateBooking(${b.id}, 'cancelled')" 
-                class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600">Cancel</button>
-              <button onclick="updateBooking(${b.id}, 'rescheduled')" 
-                class="px-3 py-1 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600">Reschedule</button>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      } catch (err) {
-        console.error("Error fetching bookings:", err);
-      }
-    }
+        if (!selectedTasker) {
+          throw new Error("No taskers available");
+        }
 
-    async function updateBooking(id, status) {
-      try {
-        const res = await fetch(`http://127.0.0.1:8000/bookings/${id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status })
-        });
-        const result = await res.json();
-        console.log("Update result:", result);
-        fetchBookings(); // refresh list
-      } catch (err) {
-        console.error("Error updating booking:", err);
-      }
-    }
+        // Create booking data
+        const bookingData = {
+          task_id: taskIdToUse,
+          tasker_id: selectedTasker.id,
+          customer_id: customerId,
+          service_name: service || "Service",
+          provider_name: selectedTasker.name,
+          customer_name: formData.name,
+          customer_address: formData.address,
+          customer_phone: formData.phone
+        };
 
-    fetchBookings();
+        // Store booking data for payment page
+        localStorage.setItem('lastBooking', JSON.stringify(bookingData));
+        
+        // Redirect to payment page
+        window.location.href = `payment.html?service=${encodeURIComponent(bookingData.service_name)}&provider=${encodeURIComponent(bookingData.provider_name)}`;
+
+      } catch (error) {
+        console.error("Booking error:", error);
+        alert("Failed to create booking. Please try again.");
+        
+        // Reset button
+        const submitBtn = document.querySelector('button[type="submit"]');
+        submitBtn.textContent = "Confirm Booking";
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Check auth on page load
+    checkAuth();
   </script>
 </body>
 </html>
