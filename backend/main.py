@@ -37,7 +37,11 @@ app.mount("/static", StaticFiles(directory="../frontend"), name="static")
 # --------------------------
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+try:
+    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+except Exception as e:
+    print(f"Warning: Supabase connection failed: {e}")
+    supabase = None
 
 # Initialize Uber-like booking system (temporarily disabled)
 # booking_system = UberLikeBookingSystem()
@@ -79,7 +83,7 @@ class TaskUpdate(BaseModel):
     status: Optional[str] = None  # open, in-progress, completed
 
 class BookingCreate(BaseModel):
-    task_id: int
+    task_id: str
     tasker_id: str
     customer_id: str
 
@@ -114,18 +118,25 @@ class LoginRequest(BaseModel):
 
 @app.post("/login/customer")
 def login_customer(email: str = Body(...), password: str = Body(...)):
-    user = supabase.auth.sign_in_with_password({"email": email, "password": password})
-    if not user.user:
-        raise HTTPException(status_code=400, detail="Login failed")
+    if not supabase:
+        # Mock login for demo purposes when Supabase is not available
+        return {"message": "Login successful (demo mode)", "user_id": "demo_user_123", "user_name": "Demo User"}
     
-    # Get user profile to return name
     try:
-        profile_response = supabase.table("profiles").select("name").eq("id", user.user.id).execute()
-        user_name = profile_response.data[0]["name"] if profile_response.data else "User"
-    except:
-        user_name = "User"
-    
-    return {"message": "Login successful", "user_id": user.user.id, "user_name": user_name}
+        user = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        if not user.user:
+            raise HTTPException(status_code=400, detail="Login failed")
+        
+        # Get user profile to return name
+        try:
+            profile_response = supabase.table("profiles").select("name").eq("id", user.user.id).execute()
+            user_name = profile_response.data[0]["name"] if profile_response.data else "User"
+        except:
+            user_name = "User"
+        
+        return {"message": "Login successful", "user_id": user.user.id, "user_name": user_name}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Login failed: {str(e)}")
 
 # --------------------------
 # Step 2: Providers Endpoint
@@ -150,52 +161,99 @@ def get_providers(service: str = Query(..., description="Service type, e.g., cle
 # --------------------------
 @app.post("/register/customer")
 def register_customer(data: CustomerRegister):
-    user = supabase.auth.sign_up({"email": data.email, "password": data.password})
-    if not user.user:
-        raise HTTPException(status_code=400, detail=user.get("message", "Signup failed"))
+    if not supabase:
+        # Mock registration for demo purposes when Supabase is not available
+        return {"message": "Customer registered (demo mode)", "user_id": f"demo_user_{data.email.replace('@', '_')}"}
+    
+    try:
+        user = supabase.auth.sign_up({"email": data.email, "password": data.password})
+        if not user.user:
+            raise HTTPException(status_code=400, detail=user.get("message", "Signup failed"))
 
-    supabase.table("profiles").insert({
-        "id": user.user.id,
-        "name": data.name,
-        "role": "customer"
-    }).execute()
-    return {"message": "Customer registered", "user_id": user.user.id}
+        supabase.table("profiles").insert({
+            "id": user.user.id,
+            "name": data.name,
+            "role": "customer"
+        }).execute()
+        return {"message": "Customer registered", "user_id": user.user.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 @app.post("/register/tasker")
 def register_tasker(data: TaskerRegister):
-    user = supabase.auth.sign_up({"email": data.email, "password": data.password})
-    if not user.user:
-        raise HTTPException(status_code=400, detail=user.get("message", "Signup failed"))
+    if not supabase:
+        # Mock registration for demo purposes when Supabase is not available
+        return {"message": "Tasker registered (demo mode)", "tasker_id": f"demo_tasker_{data.email.replace('@', '_')}"}
+    
+    try:
+        user = supabase.auth.sign_up({"email": data.email, "password": data.password})
+        if not user.user:
+            raise HTTPException(status_code=400, detail=user.get("message", "Signup failed"))
 
-    supabase.table("profiles").insert({
-        "id": user.user.id,
-        "name": data.name,
-        "role": "tasker",
-        "skills": data.skills,
-        "hourly_rate": data.hourly_rate,
-        "bio": data.bio
-    }).execute()
-    return {"message": "Tasker registered", "tasker_id": user.user.id}
+        supabase.table("profiles").insert({
+            "id": user.user.id,
+            "name": data.name,
+            "role": "tasker",
+            "skills": data.skills,
+            "hourly_rate": data.hourly_rate,
+            "bio": data.bio
+        }).execute()
+        return {"message": "Tasker registered", "tasker_id": user.user.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 # --------------------------
 # Tasks Endpoints
 # --------------------------
 @app.post("/tasks")
 def create_task(data: TaskCreate):
-    response = supabase.table("tasks").insert({
-        "title": data.title,
-        "description": data.description,
-        "customer_id": data.customer_id,
-        "status": data.status
-    }).execute()
-    if not response.data:
-        raise HTTPException(status_code=400, detail="Failed to create task")
-    return {"message": "Task created", "task": response.data}
+    if not supabase:
+        # Mock task creation for demo purposes when Supabase is not available
+        task_id = f"demo_task_{len(str(hash(data.title + data.customer_id)))}"
+        mock_task = {
+            "id": task_id,
+            "title": data.title,
+            "description": data.description,
+            "customer_id": data.customer_id,
+            "status": data.status,
+            "created_at": "2024-01-01T00:00:00Z"
+        }
+        return {"message": "Task created (demo mode)", "task": [mock_task]}
+    
+    try:
+        response = supabase.table("tasks").insert({
+            "title": data.title,
+            "description": data.description,
+            "customer_id": data.customer_id,
+            "status": data.status
+        }).execute()
+        if not response.data:
+            raise HTTPException(status_code=400, detail="Failed to create task")
+        return {"message": "Task created", "task": response.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Task creation failed: {str(e)}")
 
 @app.get("/tasks")
 def list_tasks(customer_id: str):
-    response = supabase.table("tasks").select("*").eq("customer_id", customer_id).execute()
-    return {"tasks": response.data}
+    if not supabase:
+        # Mock task listing for demo purposes when Supabase is not available
+        mock_tasks = [
+            {
+                "id": "demo_task_1",
+                "title": "Sample Task",
+                "description": "This is a demo task",
+                "customer_id": customer_id,
+                "status": "open",
+                "created_at": "2024-01-01T00:00:00Z"
+            }
+        ]
+        return {"tasks": mock_tasks}
+    
+    try:
+        response = supabase.table("tasks").select("*").eq("customer_id", customer_id).execute()
+        return {"tasks": response.data or []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch tasks: {str(e)}")
 
 @app.patch("/tasks/{task_id}")
 def update_task(task_id: int = Path(...), data: TaskUpdate = None):
@@ -213,25 +271,78 @@ def update_task(task_id: int = Path(...), data: TaskUpdate = None):
 # --------------------------
 @app.post("/bookings")
 def create_booking(data: BookingCreate):
-    response = supabase.table("bookings").insert({
-        "task_id": data.task_id,
-        "customer_id": data.customer_id,
-        "tasker_id": data.tasker_id,
-        "status": "pending"
-    }).execute()
-    if not response.data:
-        raise HTTPException(status_code=400, detail="Failed to create booking")
-    return {"message": "Booking created", "booking": response.data}
+    if not supabase:
+        # Mock booking creation for demo purposes when Supabase is not available
+        booking_id = f"demo_booking_{len(str(hash(str(data.task_id) + data.customer_id + data.tasker_id)))}"
+        mock_booking = {
+            "id": booking_id,
+            "task_id": data.task_id,
+            "customer_id": data.customer_id,
+            "tasker_id": data.tasker_id,
+            "status": "pending",
+            "created_at": "2024-01-01T00:00:00Z"
+        }
+        return {"message": "Booking created (demo mode)", "booking": [mock_booking]}
+    
+    try:
+        response = supabase.table("bookings").insert({
+            "task_id": data.task_id,
+            "customer_id": data.customer_id,
+            "tasker_id": data.tasker_id,
+            "status": "pending"
+        }).execute()
+        if not response.data:
+            raise HTTPException(status_code=400, detail="Failed to create booking")
+        return {"message": "Booking created", "booking": response.data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Booking creation failed: {str(e)}")
 
 
 @app.get("/bookings/tasker")
 def list_tasker_bookings(tasker_id: str):
-    response = supabase.table("bookings").select("*").eq("tasker_id", tasker_id).execute()
-    return {"bookings": response.data}
+    if not supabase:
+        # Mock booking listing for demo purposes when Supabase is not available
+        mock_bookings = [
+            {
+                "id": "demo_booking_1",
+                "task_id": "demo_task_1",
+                "customer_id": "demo_customer_1",
+                "tasker_id": tasker_id,
+                "status": "pending",
+                "created_at": "2024-01-01T00:00:00Z"
+            }
+        ]
+        return {"bookings": mock_bookings}
+    
+    try:
+        response = supabase.table("bookings").select("*").eq("tasker_id", tasker_id).execute()
+        return {"bookings": response.data or []}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch bookings: {str(e)}")
 
 @app.get("/taskers")
 def get_taskers():
     """Get all available taskers"""
+    if not supabase:
+        # Mock taskers for demo purposes when Supabase is not available
+        mock_taskers = [
+            {
+                "id": "demo_tasker_1",
+                "name": "John Smith",
+                "skills": ["cleaning", "repairs"],
+                "hourly_rate": 25.0,
+                "bio": "Experienced handyman with 5+ years of experience"
+            },
+            {
+                "id": "demo_tasker_2", 
+                "name": "Sarah Johnson",
+                "skills": ["beauty", "cleaning"],
+                "hourly_rate": 30.0,
+                "bio": "Professional beauty and cleaning specialist"
+            }
+        ]
+        return {"taskers": mock_taskers}
+    
     try:
         response = supabase.table("profiles").select("id, name, skills, hourly_rate, bio").eq("role", "tasker").execute()
         return {"taskers": response.data or []}
@@ -424,6 +535,10 @@ async def pay_success(booking_id: str):
 
 @app.post("/register/provider")
 def register_provider(provider: ProviderRegister):
+    if not supabase:
+        # Mock registration for demo purposes when Supabase is not available
+        return {"message": "Provider registered successfully (demo mode)", "provider_id": f"demo_provider_{provider.email.replace('@', '_')}"}
+    
     try:
         # Create auth user
         user = supabase.auth.sign_up({
@@ -452,6 +567,10 @@ def register_provider(provider: ProviderRegister):
 
 @app.post("/login/provider")
 def login_provider(email: str = Body(...), password: str = Body(...)):
+    if not supabase:
+        # Mock login for demo purposes when Supabase is not available
+        return {"message": "Login successful (demo mode)", "provider_id": "demo_provider_123", "provider_name": "Demo Provider"}
+    
     try:
         user = supabase.auth.sign_in_with_password({"email": email, "password": password})
         if not user.user:
@@ -468,6 +587,22 @@ def login_provider(email: str = Body(...), password: str = Body(...)):
 @app.get("/bookings")
 def get_bookings(customer_id: str = Query(None), provider_id: str = Query(None)):
     """Get bookings - simplified for performance"""
+    if not supabase:
+        # Mock bookings for demo purposes when Supabase is not available
+        mock_bookings = [
+            {
+                "id": "demo_booking_1",
+                "task_id": "demo_task_1",
+                "customer_id": customer_id or "demo_customer_1",
+                "tasker_id": provider_id or "demo_tasker_1",
+                "status": "pending",
+                "created_at": "2024-01-01T00:00:00Z",
+                "task": {"title": "Sample Service Request"},
+                "tasker": {"name": "Demo Provider"}
+            }
+        ]
+        return {"bookings": mock_bookings}
+    
     try:
         if customer_id:
             # Get bookings for a specific customer

@@ -62,9 +62,6 @@
         <button id="refreshBtn" class="px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700 flex items-center">
           <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i> Refresh
         </button>
-        <button onclick="addTestBooking()" class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center">
-          <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Add Test Booking
-        </button>
       </div>
     </div>
 
@@ -799,30 +796,6 @@
       }, 3000);
     }
 
-    // Function to add a new booking for testing
-    function addTestBooking() {
-      const customerId = localStorage.getItem("customerId");
-      if (!customerId) return;
-      
-      const newBooking = {
-        id: Date.now(),
-        task_id: Math.floor(Math.random() * 100) + 1,
-        customer_id: customerId,
-        status: "pending",
-        created_at: new Date().toISOString(),
-        task: { title: "Test Service " + Math.floor(Math.random() * 100) },
-        tasker: { name: "Test Provider" }
-      };
-      
-      const existingBookings = JSON.parse(localStorage.getItem(`bookings_${customerId}`) || '[]');
-      existingBookings.push(newBooking);
-      localStorage.setItem(`bookings_${customerId}`, JSON.stringify(existingBookings));
-      
-      // Reload bookings
-      loadBookings();
-      showNotification("Test booking added!", "success");
-    }
-
     // Initialize with Uber-like features
     setupFilters();
     checkAuthStatus();
@@ -835,8 +808,6 @@
       stopRealTimeUpdates();
     });
     
-    // Add test booking button (for development)
-    window.addTestBooking = addTestBooking;
   </script>
 </body>
 
