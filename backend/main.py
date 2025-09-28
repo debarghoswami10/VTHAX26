@@ -199,6 +199,14 @@ def create_booking(data: BookingCreate):
     return {"message": "Booking created", "booking": response.data}
 
 @app.get("/bookings")
+def get_bookings(customer_id: str):
+    response = supabase.table("bookings") \
+        .select("id, task_id, status, created_at, task:tasks(title), tasker:profiles(name)") \
+        .eq("customer_id", customer_id) \
+        .execute()
+    return response.data
+
+@app.get("/bookings")
 def list_bookings(customer_id: str):
     response = supabase.table("bookings").select("*").eq("customer_id", customer_id).execute()
     return {"bookings": response.data}
@@ -288,3 +296,50 @@ def match_service_providers(data: MatchRequest):
 @app.get("/api/ai/health")
 def ai_health_check():
     return {"status": "healthy", "ai_enabled": True, "ollama_url": "http://localhost:11434"}
+
+@app.post("/checkout")
+async def checkout(booking: dict):
+    """
+    Mock checkout endpoint.
+    Pretend we create a payment session and return a fake paywall URL.
+    """
+    booking_id = booking.get("booking_id")
+    if not booking_id:
+        raise HTTPException(status_code=400, detail="Missing booking_id")
+
+    # In real case: create Stripe/PayPal session here
+    payment_url = f"http://127.0.0.1:8000/pay/{booking_id}"
+
+    return {"status": "pending_payment", "payment_url": payment_url}
+
+@app.get("/pay/{booking_id}", response_class=HTMLResponse)
+async def pay_page(booking_id: str):
+    return f"""
+    <html>
+      <head>
+        <title>Mock Payment</title>
+      </head>
+      <body style="font-family: sans-serif; text-align: center; margin-top: 100px;">
+        <h1>Payment for Booking {booking_id}</h1>
+        <p>This is a mock paywall. Click below to simulate payment.</p>
+        <form action="/pay/success/{booking_id}" method="get">
+          <button type="submit" style="padding: 10px 20px; font-size: 16px;">Pay Now</button>
+        </form>
+      </body>
+    </html>
+    """
+
+@app.get("/pay/success/{booking_id}", response_class=HTMLResponse)
+async def pay_success(booking_id: str):
+    return f"""
+    <html>
+      <head>
+        <title>Payment Success</title>
+      </head>
+      <body style="font-family: sans-serif; text-align: center; margin-top: 100px;">
+        <h1>Payment Successful</h1>
+        <p>Your payment for booking {booking_id} has been processed.</p>
+        <p>Thank you for using our service!</p>
+      </body>
+    </html>
+    """
