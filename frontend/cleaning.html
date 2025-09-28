@@ -37,7 +37,6 @@
 
   <!-- MAIN CONTENT -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <!-- Heading -->
     <h2 class="text-xl font-bold mb-4">Cleaning Providers</h2>
 
     <!-- FILTERS -->
@@ -89,20 +88,9 @@
   <!-- SCRIPT -->
   <script>
     lucide.createIcons();
-
-    // Provider Data (Cleaning)
-    const providers = [
-      { name: "Sparkle Cleaners", services: "House Cleaning, Deep Cleaning", rating: 4.8, reviews: 250, priceMin: 50, priceMax: 150, time: 60 },
-      { name: "Fresh Home", services: "Kitchen & Bathroom Cleaning", rating: 4.6, reviews: 180, priceMin: 40, priceMax: 120, time: 45 },
-      { name: "EcoShine Services", services: "Eco-Friendly Cleaning", rating: 4.7, reviews: 300, priceMin: 55, priceMax: 140, time: 70 },
-      { name: "DustAway", services: "Home Dusting, Vacuum", rating: 4.5, reviews: 100, priceMin: 30, priceMax: 90, time: 40 },
-      { name: "Shiny Spaces", services: "Full House Cleaning", rating: 4.9, reviews: 400, priceMin: 60, priceMax: 160, time: 80 },
-      { name: "QuickClean", services: "Express Cleaning", rating: 4.4, reviews: 90, priceMin: 25, priceMax: 70, time: 30 },
-      { name: "MaidPro", services: "Maid Services", rating: 4.6, reviews: 200, priceMin: 35, priceMax: 100, time: 50 },
-      { name: "Pristine Homes", services: "Premium Cleaning Packages", rating: 4.7, reviews: 220, priceMin: 70, priceMax: 180, time: 90 }
-    ];
-
+    let allProviders = [];
     const grid = document.getElementById("providerGrid");
+    const customerId = localStorage.getItem("customerId");
 
     function renderProviders(list) {
       grid.innerHTML = "";
@@ -110,8 +98,7 @@
         const card = document.createElement("div");
         card.className = "bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden";
         card.innerHTML = `
-          <img src="https://via.placeholder.com/300x200" alt="Provider"
-               class="w-full h-40 object-cover">
+          <img src="https://via.placeholder.com/300x200" alt="Provider" class="w-full h-40 object-cover">
           <div class="p-4">
             <h3 class="font-semibold text-gray-900">${p.name}</h3>
             <p class="text-sm text-gray-500">${p.services}</p>
@@ -120,6 +107,9 @@
               <span>${p.rating} (${p.reviews}+)</span>
             </div>
             <p class="text-sm text-teal-600 mt-1">$${p.priceMin} - $${p.priceMax}</p>
+            <button class="mt-2 w-full py-1 bg-teal-600 text-white rounded hover:bg-teal-700" onclick="bookProvider('${p.id}')">
+              Book
+            </button>
           </div>
         `;
         grid.appendChild(card);
@@ -127,22 +117,56 @@
       lucide.createIcons();
     }
 
-    // Initial Render
-    renderProviders(providers);
+    async function fetchProviders() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/providers");
+        allProviders = await res.json();
+        renderProviders(allProviders);
+      } catch (err) {
+        console.error("Failed to fetch providers:", err);
+      }
+    }
 
-    // Filter Buttons
+    async function bookProvider(taskerId) {
+      if (!customerId) {
+        alert("Please register or log in first.");
+        return;
+      }
+      const taskTitle = prompt("Enter task title:");
+      if (!taskTitle) return;
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ task_id: 0, tasker_id: taskerId, customer_id: customerId })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert("Booking created successfully!");
+        } else {
+          alert(data.detail || "Booking failed");
+        }
+      } catch (err) {
+        console.error("Booking error:", err);
+        alert("Booking failed. Check console for details.");
+      }
+    }
+
+    fetchProviders();
+
     document.getElementById("filterRating").addEventListener("click", () => {
-      const sorted = [...providers].sort((a, b) => b.rating - a.rating);
+      const sorted = [...allProviders].sort((a,b) => b.rating - a.rating);
       renderProviders(sorted);
     });
 
     document.getElementById("filterTime").addEventListener("click", () => {
-      const sorted = [...providers].sort((a, b) => a.time - b.time);
+      const sorted = [...allProviders].sort((a,b) => a.time - b.time);
       renderProviders(sorted);
     });
 
     document.getElementById("filterPrice").addEventListener("click", () => {
-      const sorted = [...providers].sort((a, b) => a.priceMin - b.priceMin);
+      const sorted = [...allProviders].sort((a,b) => a.priceMin - b.priceMin);
       renderProviders(sorted);
     });
   </script>

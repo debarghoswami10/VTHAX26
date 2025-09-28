@@ -8,7 +8,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-gray-50">
-  <!-- HEADER -->
   <header class="bg-white shadow-sm sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
       <a href="index.html" class="flex items-center space-x-2">
@@ -35,73 +34,21 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <!-- Heading -->
     <h2 class="text-xl font-bold mb-4">Repair Providers</h2>
 
-    <!-- FILTERS -->
     <div class="flex space-x-3 mb-6 overflow-x-auto">
       <button id="filterRating" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Rating</button>
       <button id="filterTime" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Time</button>
       <button id="filterPrice" class="px-4 py-2 text-sm bg-gray-100 rounded-full hover:bg-teal-100 hover:text-teal-600">Price</button>
     </div>
 
-    <!-- PROVIDERS GRID -->
     <div id="providerGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="bg-white border-t mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div>
-        <div class="flex items-center space-x-2 mb-4">
-          <div class="bg-teal-600 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold">w</div>
-          <span class="font-bold text-xl text-gray-900">woke</span>
-        </div>
-        <p class="text-gray-600 text-sm">Premium services delivered right to your doorstep. Professional, reliable, and convenient.</p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-3">Services</h3>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li><a href="beauty.html" class="hover:text-teal-600">Beauty & Wellness</a></li>
-          <li><a href="cleaning.html" class="hover:text-teal-600">Cleaning</a></li>
-          <li><a href="repairs.html" class="hover:text-teal-600">Repairs</a></li>
-          <li><a href="carcare.html" class="hover:text-teal-600">Car Care</a></li>
-          <li><a href="appliance.html" class="hover:text-teal-600">Appliance</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-3">Support</h3>
-        <ul class="space-y-2 text-sm text-gray-600">
-          <li><a href="#" class="hover:text-teal-600">Contact Us</a></li>
-          <li><a href="#" class="hover:text-teal-600">Help Center</a></li>
-          <li><a href="#" class="hover:text-teal-600">Terms of Service</a></li>
-          <li><a href="#" class="hover:text-teal-600">Privacy Policy</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="border-t py-4 text-center text-sm text-gray-500">
-      © 2025 woke. All rights reserved.
-    </div>
-  </footer>
-
-  <!-- SCRIPT -->
   <script>
     lucide.createIcons();
-
-    // Provider Data (Repairs)
-    const providers = [
-      { name: "HandyFix", services: "General Handyman Services", rating: 4.7, reviews: 220, priceMin: 50, priceMax: 150, time: 60 },
-      { name: "PipeMasters", services: "Plumbing Repairs", rating: 4.8, reviews: 300, priceMin: 70, priceMax: 200, time: 75 },
-      { name: "WireWorks", services: "Electrical Repairs", rating: 4.6, reviews: 180, priceMin: 60, priceMax: 180, time: 80 },
-      { name: "FixItNow", services: "Emergency Home Repairs", rating: 4.5, reviews: 140, priceMin: 80, priceMax: 250, time: 50 },
-      { name: "RoofCare", services: "Roof Repairs", rating: 4.7, reviews: 260, priceMin: 120, priceMax: 400, time: 120 },
-      { name: "WallPro", services: "Drywall & Painting", rating: 4.4, reviews: 100, priceMin: 90, priceMax: 220, time: 95 },
-      { name: "HomeTech", services: "Smart Home Repairs", rating: 4.6, reviews: 200, priceMin: 100, priceMax: 300, time: 110 },
-      { name: "ApplianceMedic", services: "Major Appliance Repairs", rating: 4.5, reviews: 150, priceMin: 85, priceMax: 250, time: 85 }
-    ];
-
+    let allProviders = [];
     const grid = document.getElementById("providerGrid");
 
     function renderProviders(list) {
@@ -120,6 +67,7 @@
               <span>${p.rating} (${p.reviews}+)</span>
             </div>
             <p class="text-sm text-teal-600 mt-1">$${p.priceMin} - $${p.priceMax}</p>
+            <button onclick="bookProvider('${p.id}')" class="mt-2 px-3 py-1 text-sm bg-teal-600 text-white rounded hover:bg-teal-700">Book Now</button>
           </div>
         `;
         grid.appendChild(card);
@@ -127,22 +75,60 @@
       lucide.createIcons();
     }
 
-    // Initial Render
-    renderProviders(providers);
+    async function fetchProviders() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/providers?service=repairs");
+        allProviders = await res.json();
+        renderProviders(allProviders);
+      } catch (err) {
+        console.error("Failed to fetch providers:", err);
+      }
+    }
 
-    // Filter Buttons
+    async function bookProvider(taskerId) {
+      const customerId = localStorage.getItem("customerId");
+      if (!customerId) return alert("Please login first.");
+
+      const taskTitle = prompt("Enter a title for your task:");
+      if (!taskTitle) return alert("Task title is required.");
+
+      try {
+        const taskRes = await fetch("http://127.0.0.1:8000/tasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: taskTitle, description: "", customer_id: customerId })
+        });
+        const taskData = await taskRes.json();
+        const taskId = taskData.task[0].id;
+
+        const bookingRes = await fetch("http://127.0.0.1:8000/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ task_id: taskId, tasker_id: taskerId, customer_id: customerId })
+        });
+        const bookingData = await bookingRes.json();
+
+        alert(`Booking created with ${bookingData.booking[0].tasker_id}!`);
+      } catch (err) {
+        console.error("Failed to book provider:", err);
+        alert("Booking failed. Check console for details.");
+      }
+    }
+
+    fetchProviders();
+
     document.getElementById("filterRating").addEventListener("click", () => {
-      const sorted = [...providers].sort((a, b) => b.rating - a.rating);
+      const sorted = [...allProviders].sort((a, b) => b.rating - a.rating);
       renderProviders(sorted);
     });
 
     document.getElementById("filterTime").addEventListener("click", () => {
-      const sorted = [...providers].sort((a, b) => a.time - b.time);
+      const sorted = [...allProviders].sort((a, b) => a.time - b.time);
       renderProviders(sorted);
     });
 
     document.getElementById("filterPrice").addEventListener("click", () => {
-      const sorted = [...providers].sort((a, b) => a.priceMin - b.priceMin);
+      const sorted = [...allProviders].sort((a, b) => a.priceMin - b.priceMin);
       renderProviders(sorted);
     });
   </script>

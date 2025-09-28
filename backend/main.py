@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Path, Body
+from fastapi import FastAPI, HTTPException, Path, Body, Query
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from supabase import create_client
@@ -83,6 +83,43 @@ def root():
 def get_profiles():
     response = supabase.table("profiles").select("*").execute()
     return response.data
+
+# --------------------------
+# Login Endpoint
+# --------------------------
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+@app.post("/login/customer")
+def login_customer(data: LoginRequest):
+    try:
+        user = supabase.auth.sign_in({"email": data.email, "password": data.password})
+        if not user.user:
+            raise HTTPException(status_code=400, detail="Invalid credentials")
+        # Return user id for frontend storage
+        return {"message": "Login successful", "user_id": user.user.id, "email": user.user.email}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Login failed: {str(e)}")
+
+
+# --------------------------
+# Step 2: Providers Endpoint
+# --------------------------
+@app.get("/providers")
+def get_providers(service: str = Query(..., description="Service type, e.g., cleaning, repairs, carcare, beauty, appliance")):
+    """
+    Fetch providers filtered by service type.
+    """
+    try:
+        # Assuming your Supabase table for providers is 'providers' 
+        # and each provider has a 'service_type' column like 'cleaning', 'repairs', etc.
+        response = supabase.table("providers").select("*").eq("service_type", service).execute()
+        if response.data is None:
+            return []
+        return response.data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch providers: {str(e)}")
 
 # --------------------------
 # Registration Endpoints
@@ -183,11 +220,8 @@ def update_booking(booking_id: int, data: BookingUpdate):
 # --------------------------
 @app.post("/reviews")
 def create_review(data: ReviewCreate):
-    # Validate rating
     if data.rating < 1 or data.rating > 5:
         raise HTTPException(status_code=400, detail="Rating must be 1-5")
-
-    # Insert into Supabase
     try:
         response = supabase.table("reviews").insert({
             "booking_id": data.booking_id,
@@ -198,21 +232,18 @@ def create_review(data: ReviewCreate):
         }).execute()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create review: {str(e)}")
-
     if not response.data:
         raise HTTPException(status_code=400, detail="Failed to create review")
-
     return {"message": "Review submitted", "review": response.data}
+
 @app.get("/reviews/{tasker_id}")
 def list_tasker_reviews(tasker_id: str):
     try:
         response = supabase.table("reviews").select("*").eq("tasker_id", tasker_id).execute()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to fetch reviews: {str(e)}")
-
     if response.data is None:
-        return {"reviews": []}  # No reviews found
-
+        return {"reviews": []}
     return {"reviews": response.data}
 
 # --------------------------
